@@ -7,6 +7,12 @@ import { Application } from './events/application.entity';
 import { Team } from './teams/team.entity';
 import { Message } from './messages/message.entity';
 import { Notification } from './notifications/notification.entity';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { EventsModule } from './events/events.module';
+import { TeamsModule } from './teams/teams.module';
+import { MessagesModule } from './messages/messages.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -25,6 +31,12 @@ import { Notification } from './notifications/notification.entity';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
+    UsersModule,
+    EventsModule,
+    TeamsModule,
+    MessagesModule,
+    NotificationsModule,
   ],
 })
 export class AppModule {}
