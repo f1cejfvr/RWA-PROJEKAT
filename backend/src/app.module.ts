@@ -1,6 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/user.entity';
+import { Event } from './events/event.entity';
+import { Application } from './events/application.entity';
+import { Team } from './teams/team.entity';
+import { Message } from './messages/message.entity';
+import { Notification } from './notifications/notification.entity';
 
 @Module({
   imports: [
@@ -14,7 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
-        autoLoadEntities: true,
+        entities: [User, Event, Application, Team, Message, Notification],
         synchronize: true,
       }),
       inject: [ConfigService],
