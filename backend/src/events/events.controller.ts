@@ -8,11 +8,7 @@ export class EventsController {
   constructor(private eventsService: EventsService) {}
 
   @Get()
-  findAll(
-    @Query('category') category?: string,
-    @Query('city') city?: string,
-    @Query('type') type?: string,
-  ) {
+  findAll(@Query('category') category?: string, @Query('city') city?: string, @Query('type') type?: string) {
     return this.eventsService.findAll({ category, city, type });
   }
 
@@ -23,10 +19,7 @@ export class EventsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(
-    @Body() data: Partial<Event>,
-    @Request() req: { user: { userId: number; email: string } },
-  ) {
+  create(@Body() data: Partial<Event>, @Request() req: { user: { userId: number; email: string } }) {
     const organizer = { id: req.user.userId, email: req.user.email } as Event['organizer'];
     return this.eventsService.create(data, organizer);
   }
@@ -62,10 +55,7 @@ export class EventsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put('applications/:applicationId/status')
-  updateStatus(
-    @Param('applicationId') applicationId: string,
-    @Body('status') status: string,
-  ) {
+  updateStatus(@Param('applicationId') applicationId: string, @Body('status') status: string) {
     return this.eventsService.updateApplicationStatus(+applicationId, status);
   }
 }
