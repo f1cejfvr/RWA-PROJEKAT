@@ -1,4 +1,29 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Notification } from '../models/notification.model';
 
-@Service()
-export class Notifications {}
+@Injectable({
+  providedIn: 'root',
+})
+export class NotificationsService {
+  private apiUrl = 'http://localhost:3000/notifications';
+
+  constructor(private http: HttpClient) {}
+
+  getMyNotifications(): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.apiUrl);
+  }
+
+  markAsRead(id: number): Observable<Notification> {
+    return this.http.put<Notification>(`${this.apiUrl}/${id}/read`, {});
+  }
+
+  markAllAsRead(): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/read-all`, {});
+  }
+
+  remove(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+}
