@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -11,8 +11,11 @@ import {
   applyToEvent, applyToEventSuccess, applyToEventFailure,
 } from './events.actions';
 
-@Injectable()
 export class EventsEffects {
+  private actions$ = inject(Actions);
+  private eventsService = inject(EventsService);
+  private router = inject(Router);
+
   loadEvents$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadEvents),
@@ -69,10 +72,4 @@ export class EventsEffects {
       ),
     ),
   );
-
-  constructor(
-    private actions$: Actions,
-    private eventsService: EventsService,
-    private router: Router,
-  ) {}
 }

@@ -1,1 +1,22 @@
-<p>navbar works!</p>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a routerLink="/">PlayMate</a>
+  </div>
+
+  <div class="navbar-links">
+    <a routerLink="/events">Eventi</a>
+    <a routerLink="/teams">Timovi</a>
+    <a routerLink="/users">Igrači</a>
+
+    <ng-container *ngIf="isLoggedIn$ | async; else guestLinks">
+      <a routerLink="/notifications">Notifikacije</a>
+      <a routerLink="/profile">Profil ({{ (user$ | async)?.username }})</a>
+      <button (click)="onLogout()">Odjavi se</button>
+    </ng-container>
+
+    <ng-template #guestLinks>
+      <a routerLink="/login">Prijavi se</a>
+      <a routerLink="/register">Registruj se</a>
+    </ng-template>
+  </div>
+</nav>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -11,8 +11,11 @@ import {
   joinTeam, joinTeamSuccess, joinTeamFailure,
 } from './teams.actions';
 
-@Injectable()
 export class TeamsEffects {
+  private actions$ = inject(Actions);
+  private teamsService = inject(TeamsService);
+  private router = inject(Router);
+
   loadTeams$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadTeams),
@@ -69,10 +72,4 @@ export class TeamsEffects {
       ),
     ),
   );
-
-  constructor(
-    private actions$: Actions,
-    private teamsService: TeamsService,
-    private router: Router,
-  ) {}
 }
