@@ -1,1 +1,65 @@
-<p>event-detail works!</p>
+<div class="container" *ngIf="event$ | async as event">
+  <div class="event-detail-card">
+    <div class="event-detail-header">
+      <div>
+        <span class="event-category">
+          {{ event.category === 'gaming' ? '🎮' : '⚽' }} {{ event.category }}
+        </span>
+        <span class="event-type">
+          {{ event.type === 'tournament' ? '🏆 Turnir' : '🎯 Casual' }}
+        </span>
+      </div>
+      <span class="event-status" [class.open]="event.status === 'open'">
+        {{ event.status === 'open' ? 'Otvoreno' : 'Zatvoreno' }}
+      </span>
+    </div>
+
+    <h1>{{ event.title }}</h1>
+    <p class="event-description">{{ event.description }}</p>
+
+    <div class="event-meta">
+      <div class="meta-item">
+        <span class="meta-label">Organizator</span>
+        <span>{{ event.organizer?.username || event.organizer?.email }}</span>
+      </div>
+      <div class="meta-item" *ngIf="event.game">
+        <span class="meta-label">Igrica</span>
+        <span>{{ event.game }}</span>
+      </div>
+      <div class="meta-item" *ngIf="event.sport">
+        <span class="meta-label">Sport</span>
+        <span>{{ event.sport }}</span>
+      </div>
+      <div class="meta-item" *ngIf="event.city">
+        <span class="meta-label">Grad</span>
+        <span>📍 {{ event.city }}</span>
+      </div>
+      <div class="meta-item" *ngIf="event.location">
+        <span class="meta-label">Lokacija</span>
+        <span>{{ event.location }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Maks. igrača</span>
+        <span>👥 {{ event.maxPlayers }}</span>
+      </div>
+      <div class="meta-item" *ngIf="event.date">
+        <span class="meta-label">Datum</span>
+        <span>📅 {{ event.date | date: 'dd.MM.yyyy HH:mm' }}</span>
+      </div>
+    </div>
+
+    <div class="event-actions" *ngIf="user$ | async as user">
+      <ng-container *ngIf="user.id === event.organizer?.id; else playerActions">
+        <button class="btn btn-primary" disabled>Ti si organizator</button>
+        <button class="btn btn-danger" (click)="onDelete(event.id)">Obriši event</button>
+      </ng-container>
+      <ng-template #playerActions>
+        <button class="btn btn-primary" (click)="onApply(event.id)" [disabled]="event.status !== 'open'">
+          {{ event.status === 'open' ? 'Prijavi se' : 'Prijave zatvorene' }}
+        </button>
+      </ng-template>
+    </div>
+
+    <a routerLink="/events" class="back-link">← Nazad na evente</a>
+  </div>
+</div>
