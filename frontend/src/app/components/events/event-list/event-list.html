@@ -1,1 +1,58 @@
-<p>event-list works!</p>
+<div class="container">
+  <div class="page-header">
+    <h1>Eventi</h1>
+    <a *ngIf="isLoggedIn$ | async" routerLink="/events/create" class="btn btn-primary">
+      + Kreiraj event
+    </a>
+  </div>
+
+  <div class="filters">
+    <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
+      <option value="">Sve kategorije</option>
+      <option value="gaming">Gaming</option>
+      <option value="sports">Sport</option>
+    </select>
+
+    <select [(ngModel)]="typeFilter" (change)="applyFilters()">
+      <option value="">Svi tipovi</option>
+      <option value="tournament">Turnir</option>
+      <option value="casual">Casual</option>
+    </select>
+
+    <input
+      type="text"
+      [(ngModel)]="cityFilter"
+      placeholder="Filtriraj po gradu..."
+      (input)="applyFilters()"
+    />
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">Učitavanje...</div>
+
+  <div class="events-grid">
+    <div *ngFor="let event of events$ | async" class="event-card">
+      <div class="event-header">
+        <span class="event-category" [class.gaming]="event.category === 'gaming'">
+          {{ event.category === 'gaming' ? '🎮' : '⚽' }} {{ event.category }}
+        </span>
+        <span class="event-type">{{ event.type === 'tournament' ? '🏆 Turnir' : '🎯 Casual' }}</span>
+      </div>
+      <h3>{{ event.title }}</h3>
+      <p class="event-description">{{ event.description }}</p>
+      <div class="event-info">
+        <span>📍 {{ event.city || 'Online' }}</span>
+        <span>👥 {{ event.maxPlayers }} igrača</span>
+        <span class="event-status" [class.open]="event.status === 'open'">
+          {{ event.status === 'open' ? 'Otvoreno' : 'Zatvoreno' }}
+        </span>
+      </div>
+      <a [routerLink]="['/events', event.id]" class="btn btn-secondary btn-full">
+        Pogledaj detalje
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="(events$ | async)?.length === 0 && !(loading$ | async)" class="empty-state">
+    <p>Nema evenata. Budi prvi i kreiraj jedan!</p>
+  </div>
+</div>
