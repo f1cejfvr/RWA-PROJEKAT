@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AsyncPipe, NgIf, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,7 @@ export class EventList implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
   isLoggedIn$: Observable<boolean>;
   private destroy$ = new Subject<void>();
+  private citySearch$ = new Subject<string>();
 
   categoryFilter = '';
   cityFilter = '';
@@ -34,6 +35,24 @@ export class EventList implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(loadEvents({}));
+
+    this.citySearch$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$),
+    ).subscribe((city) => {
+      this.store.dispatch(loadEvents({
+        filters: {
+          category: this.categoryFilter || undefined,
+          city: city || undefined,
+          type: this.typeFilter || undefined,
+        }
+      }));
+    });
+  }
+
+  onCityInput(value: string): void {
+    this.citySearch$.next(value);
   }
 
   applyFilters(): void {

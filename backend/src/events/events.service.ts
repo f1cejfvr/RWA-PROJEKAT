@@ -21,7 +21,7 @@ export class EventsService {
       query.andWhere('event.category = :category', { category: filters.category });
     }
     if (filters?.city) {
-      query.andWhere('event.city = :city', { city: filters.city });
+      query.andWhere('LOWER(event.city) LIKE LOWER(:city)', { city: `%${filters.city}%` });
     }
     if (filters?.type) {
       query.andWhere('event.type = :type', { type: filters.type });
