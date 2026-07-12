@@ -1,1 +1,45 @@
-<p>team-create works!</p>
+<div class="container">
+  <div class="form-card">
+    <h1>Kreiraj Tim</h1>
+
+    <div class="form-group">
+      <label for="name">Naziv tima *</label>
+      <input type="text" id="name" [(ngModel)]="name" placeholder="npr. FC Beograd" />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Opis</label>
+      <textarea id="description" [(ngModel)]="description" rows="3" placeholder="Opiši tim..."></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="category">Kategorija *</label>
+        <select id="category" [(ngModel)]="category">
+          <option value="gaming">Gaming</option>
+          <option value="sports">Sport</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="city">Grad</label>
+        <input type="text" id="city" [(ngModel)]="city" placeholder="Beograd" />
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="category === 'gaming'">
+      <label for="game">Igrica</label>
+      <input type="text" id="game" [(ngModel)]="game" placeholder="npr. League of Legends" />
+    </div>
+
+    <div class="form-group" *ngIf="category === 'sports'">
+      <label for="sport">Sport</label>
+      <input type="text" id="sport" [(ngModel)]="sport" placeholder="npr. Košarka" />
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/teams" class="btn btn-secondary">Otkaži</a>
+      <button class="btn btn-primary" (click)="onSubmit()">Kreiraj tim</button>
+    </div>
+  </div>
+</div>

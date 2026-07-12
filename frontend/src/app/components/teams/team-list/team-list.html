@@ -1,1 +1,52 @@
-<p>team-list works!</p>
+<div class="container">
+  <div class="page-header">
+    <h1>Timovi</h1>
+    <a *ngIf="isLoggedIn$ | async" routerLink="/teams/create" class="btn btn-primary">
+      + Kreiraj tim
+    </a>
+  </div>
+
+  <div class="filters">
+    <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
+      <option value="">Sve kategorije</option>
+      <option value="gaming">Gaming</option>
+      <option value="sports">Sport</option>
+    </select>
+
+    <input
+      type="text"
+      [(ngModel)]="cityFilter"
+      placeholder="Filtriraj po gradu..."
+      (input)="onCityInput(cityFilter)"
+    />
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">Učitavanje...</div>
+
+  <div class="teams-grid">
+    <div *ngFor="let team of teams$ | async" class="team-card">
+      <div class="team-header">
+        <span class="team-category" [class.gaming]="team.category === 'gaming'">
+          {{ team.category === 'gaming' ? '🎮' : '⚽' }} {{ team.category }}
+        </span>
+        <span class="team-status" [class.open]="team.status === 'open'">
+          {{ team.status === 'open' ? 'Prima članove' : 'Popunjen' }}
+        </span>
+      </div>
+      <h3>{{ team.name }}</h3>
+      <p class="team-description">{{ team.description }}</p>
+      <div class="team-info">
+        <span>👑 {{ team.captain?.username }}</span>
+        <span>👥 {{ team.members?.length || 0 }} članova</span>
+        <span *ngIf="team.city">📍 {{ team.city }}</span>
+      </div>
+      <a [routerLink]="['/teams', team.id]" class="btn btn-secondary btn-full">
+        Pogledaj tim
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="(teams$ | async)?.length === 0 && !(loading$ | async)" class="empty-state">
+    <p>Nema timova. Budi prvi i kreiraj jedan!</p>
+  </div>
+</div>
