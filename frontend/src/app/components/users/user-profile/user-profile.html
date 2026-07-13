@@ -1,1 +1,89 @@
-<p>user-profile works!</p>
+<div class="container" *ngIf="profile">
+  <div class="profile-card">
+
+    <ng-container *ngIf="!isEditing; else editForm">
+      <div class="profile-header">
+        <div class="profile-avatar">{{ profile.username[0].toUpperCase() }}</div>
+        <div class="profile-info">
+          <h1>{{ profile.username }}</h1>
+          <p class="profile-email">{{ profile.email }}</p>
+          <span class="profile-type">
+            {{ profile.type === 'gamer' ? '🎮 Gamer' : profile.type === 'sports' ? '⚽ Sportista' : '🎮⚽ Gamer & Sportista' }}
+          </span>
+        </div>
+        <button class="btn btn-primary" (click)="onEdit()">✏️ Uredi profil</button>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-item">
+          <span class="stat-value">{{ profile.rating }}</span>
+          <span class="stat-label">Rating</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ profile.matchesPlayed }}</span>
+          <span class="stat-label">Mečevi</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ profile.wins }}</span>
+          <span class="stat-label">Pobede</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ profile.city || '-' }}</span>
+          <span class="stat-label">Grad</span>
+        </div>
+      </div>
+
+      <div class="profile-bio" *ngIf="profile.bio">
+        <h3>O meni</h3>
+        <p>{{ profile.bio }}</p>
+      </div>
+
+      <div class="friends-section">
+        <h3>Prijatelji ({{ friends.length }})</h3>
+        <div class="friends-list" *ngIf="friends.length > 0; else noFriends">
+          <div *ngFor="let friend of friends" class="friend-item">
+            <div class="friend-avatar">{{ friend.username[0].toUpperCase() }}</div>
+            <span>{{ friend.username }}</span>
+          </div>
+        </div>
+        <ng-template #noFriends>
+          <p class="empty-text">Još nemaš prijatelja. Pronađi igrače!</p>
+        </ng-template>
+      </div>
+    </ng-container>
+
+    <ng-template #editForm>
+      <h2>Uredi profil</h2>
+
+      <div class="form-group">
+        <label>Korisničko ime</label>
+        <input type="text" [(ngModel)]="editData.username" />
+      </div>
+
+      <div class="form-group">
+        <label>Bio</label>
+        <textarea [(ngModel)]="editData.bio" rows="3" placeholder="Napiši nešto o sebi..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Grad</label>
+        <input type="text" [(ngModel)]="editData.city" />
+      </div>
+
+      <div class="form-group">
+        <label>Tip igrača</label>
+        <select [(ngModel)]="editData.type">
+          <option value="both">Gamer i sportista</option>
+          <option value="gamer">Samo gamer</option>
+          <option value="sports">Samo sportista</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" (click)="onCancel()">Otkaži</button>
+        <button class="btn btn-primary" (click)="onSave()">Sačuvaj</button>
+      </div>
+    </ng-template>
+
+  </div>
+</div>
