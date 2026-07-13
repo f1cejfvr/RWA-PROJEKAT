@@ -16,9 +16,7 @@ export class EventsService {
   ) {}
 
   async findAll(filters?: { category?: string; city?: string; type?: string }): Promise<Event[]> {
-    const query = this.eventRepository
-      .createQueryBuilder('event')
-      .leftJoinAndSelect('event.organizer', 'organizer');
+    const query = this.eventRepository.createQueryBuilder('event').leftJoinAndSelect('event.organizer', 'organizer');
 
     if (filters?.category) {
       query.andWhere('event.category = :category', { category: filters.category });
