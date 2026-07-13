@@ -2,18 +2,17 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 import { AsyncPipe, NgIf, NgFor, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Actions, ofType } from '@ngrx/effects';
 import { loadEvent, applyToEvent, applyToEventSuccess } from '../../../store/events.actions';
 import { selectSelectedEvent } from '../../../store/events.selectors';
 import { selectUser } from '../../../store/auth.selectors';
-import { Event } from '../../../models/event.model';
+import { Event, Application } from '../../../models/event.model';
 import { EventsService } from '../../../services/events';
 import { TeamsService } from '../../../services/teams';
 import { Team } from '../../../models/team.model';
-import { Application } from '../../../models/event.model';
 
 @Component({
   selector: 'app-event-detail',
@@ -48,13 +47,21 @@ export class EventDetail implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.store.dispatch(loadEvent({ id: +id }));
-      this.eventsService.getApplications(+id).subscribe((apps) => {
-        this.applications = apps;
-      });
     }
 
+    this.event$.pipe(
+      filter((event) => !!event),
+      takeUntil(this.destroy$),
+    ).subscribe((event) => {
+      if (event) {
+        this.eventsService.getApplications(event.id).subscribe((apps) => {
+          this.applications = apps;
+        });
+      }
+    });
+
     this.teamsService.getAll().subscribe((teams) => {
-      this.user$.subscribe((user) => {
+      this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
         if (user) {
           this.myTeams = teams.filter((t) => t.captain?.id === user.id);
         }

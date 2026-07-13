@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Event } from './event.entity';
@@ -16,7 +16,9 @@ export class EventsService {
   ) {}
 
   async findAll(filters?: { category?: string; city?: string; type?: string }): Promise<Event[]> {
-    const query = this.eventRepository.createQueryBuilder('event').leftJoinAndSelect('event.organizer', 'organizer');
+    const query = this.eventRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.organizer', 'organizer');
 
     if (filters?.category) {
       query.andWhere('event.category = :category', { category: filters.category });
@@ -53,6 +55,14 @@ export class EventsService {
 
   async apply(eventId: number, applicant: User, message?: string, teamId?: number): Promise<Application> {
     const event = await this.findOne(eventId);
+
+    const existingApplication = await this.applicationRepository.findOne({
+      where: { event: { id: eventId }, applicant: { id: applicant.id } },
+    });
+
+    if (existingApplication) {
+      throw new BadRequestException('Već ste se prijavili na ovaj event');
+    }
 
     const application = this.applicationRepository.create({
       event,
