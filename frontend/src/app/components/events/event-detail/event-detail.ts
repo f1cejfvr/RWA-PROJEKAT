@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { AsyncPipe, NgIf, NgFor, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Actions, ofType } from '@ngrx/effects';
-import { loadEvent, applyToEvent, applyToEventSuccess } from '../../../store/events.actions';
-import { selectSelectedEvent } from '../../../store/events.selectors';
+import { applyToEvent, applyToEventSuccess } from '../../../store/events.actions';
 import { selectUser } from '../../../store/auth.selectors';
 import { Event, Application } from '../../../models/event.model';
 import { EventsService } from '../../../services/events';
@@ -21,7 +20,7 @@ import { Team } from '../../../models/team.model';
   styleUrl: './event-detail.css',
 })
 export class EventDetail implements OnInit, OnDestroy {
-  event$: Observable<Event | null>;
+  event: Event | null = null;
   user$: Observable<{ id: number; email: string; username: string } | null>;
   isEditing = false;
   editData: Partial<Event> = {};
@@ -29,7 +28,9 @@ export class EventDetail implements OnInit, OnDestroy {
   selectedTeamId: number | null = null;
   applySuccess = false;
   applications: Application[] = [];
+  applicationFilter = 'all';
   private destroy$ = new Subject<void>();
+  private eventId: number = 0;
 
   constructor(
     private store: Store,
@@ -38,27 +39,23 @@ export class EventDetail implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private teamsService: TeamsService,
     private actions$: Actions,
+    private cdr: ChangeDetectorRef,
   ) {
-    this.event$ = this.store.select(selectSelectedEvent);
     this.user$ = this.store.select(selectUser);
+  }
+
+  get filteredApplications(): Application[] {
+    if (this.applicationFilter === 'all') return this.applications;
+    return this.applications.filter((a) => a.status === this.applicationFilter);
   }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.store.dispatch(loadEvent({ id: +id }));
+      this.eventId = +id;
+      this.loadEvent();
+      this.loadApplications();
     }
-
-    this.event$.pipe(
-      filter((event) => !!event),
-      takeUntil(this.destroy$),
-    ).subscribe((event) => {
-      if (event) {
-        this.eventsService.getApplications(event.id).subscribe((apps) => {
-          this.applications = apps;
-        });
-      }
-    });
 
     this.teamsService.getAll().subscribe((teams) => {
       this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
@@ -73,7 +70,30 @@ export class EventDetail implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
     ).subscribe(() => {
       this.applySuccess = true;
-      setTimeout(() => this.applySuccess = false, 3000);
+      this.loadApplications();
+      setTimeout(() => (this.applySuccess = false), 3000);
+    });
+  }
+
+  loadEvent(): void {
+    this.eventsService.getOne(this.eventId).subscribe({
+      next: (event) => {
+        this.event = event;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading event:', err);
+      },
+    });
+  }
+
+  loadApplications(): void {
+    this.eventsService.getApplications(this.eventId).subscribe((apps) => {
+      this.applications = apps.sort((a, b) => {
+        const order = { pending: 0, accepted: 1, rejected: 2 };
+        return order[a.status as keyof typeof order] - order[b.status as keyof typeof order];
+      });
+      this.cdr.detectChanges();
     });
   }
 
@@ -104,7 +124,7 @@ export class EventDetail implements OnInit, OnDestroy {
   onSaveEdit(eventId: number): void {
     this.eventsService.update(eventId, this.editData).subscribe(() => {
       this.isEditing = false;
-      this.store.dispatch(loadEvent({ id: eventId }));
+      this.loadEvent();
     });
   }
 
@@ -116,18 +136,13 @@ export class EventDetail implements OnInit, OnDestroy {
   onToggleApplications(eventId: number, currentStatus: string): void {
     const newStatus = currentStatus === 'open' ? 'full' : 'open';
     this.eventsService.update(eventId, { status: newStatus }).subscribe(() => {
-      this.store.dispatch(loadEvent({ id: eventId }));
+      this.loadEvent();
     });
   }
 
   updateAppStatus(applicationId: number, status: string): void {
     this.eventsService.updateApplicationStatus(applicationId, status).subscribe(() => {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        this.eventsService.getApplications(+id).subscribe((apps) => {
-          this.applications = apps;
-        });
-      }
+      this.loadApplications();
     });
   }
 

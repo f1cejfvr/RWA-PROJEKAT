@@ -1,5 +1,7 @@
-<div class="container" *ngIf="event$ | async as event">
+<div class="container" *ngIf="event">
   <div class="event-detail-card">
+
+    <a routerLink="/events" class="back-link">← Nazad na evente</a>
 
     <ng-container *ngIf="!isEditing; else editForm">
       <div class="event-detail-header">
@@ -60,36 +62,69 @@
         </ng-container>
         <ng-template #playerActions>
           <div *ngIf="applySuccess" class="success-message">
-          ✅ Uspešno ste se prijavili!
+            ✅ Uspešno ste se prijavili!
           </div>
           <div class="apply-section">
             <select [(ngModel)]="selectedTeamId" *ngIf="myTeams.length > 0">
               <option [ngValue]="null">Prijavi se kao pojedinac</option>
               <option *ngFor="let team of myTeams" [ngValue]="team.id">
-              Prijavi tim: {{ team.name }}
+                Prijavi tim: {{ team.name }}
               </option>
             </select>
             <button class="btn btn-primary" (click)="onApply(event.id)" [disabled]="event.status !== 'open'">
               {{ event.status === 'open' ? 'Prijavi se' : 'Prijave zatvorene' }}
-           </button>
+            </button>
           </div>
         </ng-template>
+      </div>
+
+      <div class="applications-section" *ngIf="user$ | async as user">
+        <ng-container *ngIf="user.id === event.organizer?.id">
+          <h3>Prijave ({{ applications.length }})</h3>
+          <div class="filter-tabs">
+            <button [class.active]="applicationFilter === 'all'" (click)="applicationFilter = 'all'">
+              Sve ({{ applications.length }})
+            </button>
+            <button [class.active]="applicationFilter === 'pending'" (click)="applicationFilter = 'pending'">
+              Na čekanju ({{ applications.length - filteredApplications.length + (applicationFilter === 'pending' ? filteredApplications.length : 0) }})
+            </button>
+            <button [class.active]="applicationFilter === 'accepted'" (click)="applicationFilter = 'accepted'">
+              Prihvaćene
+            </button>
+            <button [class.active]="applicationFilter === 'rejected'" (click)="applicationFilter = 'rejected'">
+              Odbijene
+            </button>
+          </div>
+          <div class="applications-list">
+            <div *ngFor="let app of filteredApplications" class="application-item">
+              <div class="app-info">
+                <span>👤 {{ app.applicant?.username }}</span>
+                <span *ngIf="app.team">🏆 Tim: {{ app.team?.name }}</span>
+                <span *ngIf="app.message">💬 {{ app.message }}</span>
+              </div>
+              <div class="app-status">
+                <span class="status-badge" [class.accepted]="app.status === 'accepted'" [class.rejected]="app.status === 'rejected'">
+                  {{ app.status === 'pending' ? 'Na čekanju' : app.status === 'accepted' ? 'Prihvaćeno' : 'Odbijeno' }}
+                </span>
+                <button class="btn btn-primary btn-sm" (click)="updateAppStatus(app.id, 'accepted')" *ngIf="app.status === 'pending'">Prihvati</button>
+                <button class="btn btn-danger btn-sm" (click)="updateAppStatus(app.id, 'rejected')" *ngIf="app.status === 'pending'">Odbij</button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </ng-container>
 
     <ng-template #editForm>
       <h2>Uredi event</h2>
-
       <div class="form-group">
         <label>Naziv</label>
         <input type="text" [(ngModel)]="editData.title" />
       </div>
-
       <div class="form-group">
         <label>Opis</label>
         <textarea [(ngModel)]="editData.description" rows="3"></textarea>
       </div>
-
       <div class="form-row">
         <div class="form-group">
           <label>Grad</label>
@@ -100,40 +135,15 @@
           <input type="number" [(ngModel)]="editData.maxPlayers" min="2" />
         </div>
       </div>
-
       <div class="form-group">
         <label>Lokacija</label>
         <input type="text" [(ngModel)]="editData.location" />
       </div>
-
       <div class="form-actions">
         <button class="btn btn-secondary" (click)="onCancelEdit()">Otkaži</button>
         <button class="btn btn-primary" (click)="onSaveEdit(event.id)">Sačuvaj</button>
       </div>
     </ng-template>
 
-    <div class="applications-section" *ngIf="user$ | async as user">
-      <ng-container *ngIf="user.id === event.organizer?.id">
-        <h3>Prijave ({{ applications.length }})</h3>
-        <div class="applications-list">
-          <div *ngFor="let app of applications" class="application-item">
-            <div class="app-info">
-              <span>👤 {{ app.applicant?.username }}</span>
-              <span *ngIf="app.team">🏆 Tim: {{ app.team?.name }}</span>
-              <span *ngIf="app.message">💬 {{ app.message }}</span>
-            </div>
-            <div class="app-status">
-              <span class="status-badge" [class.accepted]="app.status === 'accepted'" [class.rejected]="app.status === 'rejected'">
-                {{ app.status === 'pending' ? 'Na čekanju' : app.status === 'accepted' ? 'Prihvaćeno' : 'Odbijeno' }}
-              </span>
-              <button class="btn btn-primary btn-sm" (click)="updateAppStatus(app.id, 'accepted')" *ngIf="app.status === 'pending'">Prihvati</button>
-              <button class="btn btn-danger btn-sm" (click)="updateAppStatus(app.id, 'rejected')" *ngIf="app.status === 'pending'">Odbij</button>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-
-    <a routerLink="/events" class="back-link">← Nazad na evente</a>
   </div>
 </div>

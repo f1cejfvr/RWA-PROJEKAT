@@ -60,3 +60,5 @@ export const applyToEventFailure = createAction(
   '[Events] Apply To Event Failure',
   props<{ error: string }>()
 );
+
+export const clearSelectedEvent = createAction('[Events] Clear Selected Event');

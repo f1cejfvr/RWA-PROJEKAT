@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { clearSelectedEvent } from './events.actions';
 import { Event } from '../models/event.model';
 import {
   loadEventsSuccess,
@@ -28,6 +29,7 @@ export const eventsReducer = createReducer(
   on(loadEventSuccess, (state, { event }) => ({ ...state, selectedEvent: event, error: null })),
   on(createEventSuccess, (state, { event }) => adapter.addOne(event, state)),
   on(loadEventsFailure, (state, { error }) => ({ ...state, error })),
+  on(clearSelectedEvent, (state) => ({ ...state, selectedEvent: null })),
 );
 
 export const { selectAll, selectEntities, selectIds, selectTotal } = adapter.getSelectors();

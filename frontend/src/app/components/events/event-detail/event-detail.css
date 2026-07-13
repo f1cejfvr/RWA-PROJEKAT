@@ -194,3 +194,25 @@
   padding: 0.25rem 0.6rem;
   font-size: 0.8rem;
 }
+
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-tabs button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.filter-tabs button.active {
+  background: #1a1a2e;
+  color: white;
+  border-color: #1a1a2e;
+}
