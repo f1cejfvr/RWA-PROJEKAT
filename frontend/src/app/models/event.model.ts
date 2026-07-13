@@ -30,4 +30,8 @@ export interface Application {
     username: string;
   };
   event: Event;
+  team?: {
+    id:number;
+    name:string;
+  };
 }

@@ -35,8 +35,8 @@ export class EventsService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  apply(eventId: number, message?: string): Observable<Application> {
-    return this.http.post<Application>(`${this.apiUrl}/${eventId}/apply`, { message });
+  apply(eventId: number, message?: string, teamId?: number): Observable<Application> {
+  return this.http.post<Application>(`${this.apiUrl}/${eventId}/apply`, { message, teamId });
   }
 
   getApplications(eventId: number): Observable<Application[]> {

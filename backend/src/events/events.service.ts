@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { Application } from './application.entity';
 import { User } from '../users/user.entity';
+import { Team } from '../teams/team.entity';
 
 @Injectable()
 export class EventsService {
@@ -50,13 +51,20 @@ export class EventsService {
     await this.eventRepository.delete(id);
   }
 
-  async apply(eventId: number, applicant: User, message?: string): Promise<Application> {
+  async apply(eventId: number, applicant: User, message?: string, teamId?: number): Promise<Application> {
     const event = await this.findOne(eventId);
+
     const application = this.applicationRepository.create({
       event,
       applicant,
       message,
+      applicationType: teamId ? 'team' : 'individual',
     });
+
+    if (teamId) {
+      application.team = { id: teamId } as Team;
+    }
+
     return this.applicationRepository.save(application);
   }
 
@@ -69,7 +77,7 @@ export class EventsService {
   async updateApplicationStatus(applicationId: number, status: string): Promise<Application> {
     await this.applicationRepository.update(applicationId, { status });
     const application = await this.applicationRepository.findOne({ where: { id: applicationId } });
-    if (!application) throw new NotFoundException('Prijava nije pronadjena');
+    if (!application) throw new NotFoundException('Prijava nije pronađena');
     return application;
   }
 }

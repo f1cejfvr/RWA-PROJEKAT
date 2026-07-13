@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards, Request, Qu
 import { AuthGuard } from '@nestjs/passport';
 import { EventsService } from './events.service';
 import { Event } from './event.entity';
+import { User } from '../users/user.entity';
 
 @Controller('events')
 export class EventsController {
@@ -41,10 +42,11 @@ export class EventsController {
   apply(
     @Param('id') id: string,
     @Body('message') message: string,
+    @Body('teamId') teamId: number,
     @Request() req: { user: { userId: number; email: string } },
   ) {
-    const applicant = { id: req.user.userId, email: req.user.email } as Event['organizer'];
-    return this.eventsService.apply(+id, applicant, message);
+    const applicant = { id: req.user.userId, email: req.user.email } as User;
+    return this.eventsService.apply(+id, applicant, message, teamId);
   }
 
   @UseGuards(AuthGuard('jwt'))

@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Event } from './event.entity';
+import { Team } from '../teams/team.entity';
 
 @Entity()
 export class Application {
@@ -13,6 +14,9 @@ export class Application {
   @Column({ nullable: true })
   message: string;
 
+  @Column({ default: 'individual' })
+  applicationType: string; // 'individual', 'team'
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -21,4 +25,7 @@ export class Application {
 
   @ManyToOne(() => Event, { eager: true })
   event: Event;
+
+  @ManyToOne(() => Team, { nullable: true, eager: true })
+  team: Team;
 }

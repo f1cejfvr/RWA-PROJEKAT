@@ -62,14 +62,14 @@ export class EventsEffects {
   );
 
   applyToEvent$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(applyToEvent),
-      switchMap(({ eventId, message }) =>
-        this.eventsService.apply(eventId, message).pipe(
-          map((application) => applyToEventSuccess({ application })),
-          catchError((error) => of(applyToEventFailure({ error: error.message }))),
-        ),
+  this.actions$.pipe(
+    ofType(applyToEvent),
+    switchMap(({ eventId, message, teamId }) =>
+      this.eventsService.apply(eventId, message, teamId).pipe(
+        map((application) => applyToEventSuccess({ application })),
+        catchError((error) => of(applyToEventFailure({ error: error.message }))),
       ),
     ),
-  );
+  ),
+);
 }

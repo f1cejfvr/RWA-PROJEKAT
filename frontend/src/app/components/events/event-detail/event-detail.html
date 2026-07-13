@@ -59,9 +59,20 @@
           <button class="btn btn-danger" (click)="onDelete(event.id)">🗑️ Obriši event</button>
         </ng-container>
         <ng-template #playerActions>
-          <button class="btn btn-primary" (click)="onApply(event.id)" [disabled]="event.status !== 'open'">
-            {{ event.status === 'open' ? 'Prijavi se' : 'Prijave zatvorene' }}
-          </button>
+          <div *ngIf="applySuccess" class="success-message">
+          ✅ Uspešno ste se prijavili!
+          </div>
+          <div class="apply-section">
+            <select [(ngModel)]="selectedTeamId" *ngIf="myTeams.length > 0">
+              <option [ngValue]="null">Prijavi se kao pojedinac</option>
+              <option *ngFor="let team of myTeams" [ngValue]="team.id">
+              Prijavi tim: {{ team.name }}
+              </option>
+            </select>
+            <button class="btn btn-primary" (click)="onApply(event.id)" [disabled]="event.status !== 'open'">
+              {{ event.status === 'open' ? 'Prijavi se' : 'Prijave zatvorene' }}
+           </button>
+          </div>
         </ng-template>
       </div>
     </ng-container>
@@ -100,6 +111,28 @@
         <button class="btn btn-primary" (click)="onSaveEdit(event.id)">Sačuvaj</button>
       </div>
     </ng-template>
+
+    <div class="applications-section" *ngIf="user$ | async as user">
+      <ng-container *ngIf="user.id === event.organizer?.id">
+        <h3>Prijave ({{ applications.length }})</h3>
+        <div class="applications-list">
+          <div *ngFor="let app of applications" class="application-item">
+            <div class="app-info">
+              <span>👤 {{ app.applicant?.username }}</span>
+              <span *ngIf="app.team">🏆 Tim: {{ app.team?.name }}</span>
+              <span *ngIf="app.message">💬 {{ app.message }}</span>
+            </div>
+            <div class="app-status">
+              <span class="status-badge" [class.accepted]="app.status === 'accepted'" [class.rejected]="app.status === 'rejected'">
+                {{ app.status === 'pending' ? 'Na čekanju' : app.status === 'accepted' ? 'Prihvaćeno' : 'Odbijeno' }}
+              </span>
+              <button class="btn btn-primary btn-sm" (click)="updateAppStatus(app.id, 'accepted')" *ngIf="app.status === 'pending'">Prihvati</button>
+              <button class="btn btn-danger btn-sm" (click)="updateAppStatus(app.id, 'rejected')" *ngIf="app.status === 'pending'">Odbij</button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
 
     <a routerLink="/events" class="back-link">← Nazad na evente</a>
   </div>

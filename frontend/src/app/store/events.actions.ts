@@ -48,7 +48,7 @@ export const createEventFailure = createAction(
 
 export const applyToEvent = createAction(
   '[Events] Apply To Event',
-  props<{ eventId: number; message?: string }>()
+  props<{ eventId: number; message?: string; teamId?: number }>()
 );
 
 export const applyToEventSuccess = createAction(
