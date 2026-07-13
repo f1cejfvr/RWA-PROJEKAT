@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { AsyncPipe, NgIf, NgFor, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Actions, ofType } from '@ngrx/effects';
@@ -27,6 +27,7 @@ export class EventDetail implements OnInit, OnDestroy {
   myTeams: Team[] = [];
   selectedTeamId: number | null = null;
   applySuccess = false;
+  isAlreadyApplied = false;
   applications: Application[] = [];
   applicationFilter = 'all';
   private destroy$ = new Subject<void>();
@@ -70,8 +71,13 @@ export class EventDetail implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
     ).subscribe(() => {
       this.applySuccess = true;
+      this.isAlreadyApplied = true;
+      this.cdr.detectChanges();
       this.loadApplications();
-      setTimeout(() => (this.applySuccess = false), 3000);
+      setTimeout(() => {
+        this.applySuccess = false;
+        this.cdr.detectChanges();
+      }, 3000);
     });
   }
 
@@ -92,6 +98,11 @@ export class EventDetail implements OnInit, OnDestroy {
       this.applications = apps.sort((a, b) => {
         const order = { pending: 0, accepted: 1, rejected: 2 };
         return order[a.status as keyof typeof order] - order[b.status as keyof typeof order];
+      });
+      this.user$.pipe(take(1)).subscribe((user) => {
+        if (user) {
+          this.isAlreadyApplied = apps.some((a) => a.applicant?.id === user.id);
+        }
       });
       this.cdr.detectChanges();
     });
