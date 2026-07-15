@@ -52,6 +52,9 @@ export class UserProfile implements OnInit {
         bio: this.profile.bio,
         city: this.profile.city,
         type: this.profile.type,
+        rating: this.profile.rating,
+        matchesPlayed: this.profile.matchesPlayed,
+        wins: this.profile.wins,
       };
     }
   }
