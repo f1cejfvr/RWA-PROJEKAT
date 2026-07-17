@@ -1,1 +1,44 @@
-<p>user-search works!</p>
+<div class="container">
+  <div class="page-header">
+    <h1>Pronađi igrače</h1>
+  </div>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Pretraži po imenu ili gradu..."
+      (input)="onSearch(searchQuery)"
+    />
+  </div>
+
+  <div class="users-grid">
+    <div *ngFor="let user of users" class="user-card">
+      <div class="user-avatar">{{ user.username[0].toUpperCase() }}</div>
+      <div class="user-info">
+        <h3>{{ user.username }}</h3>
+        <p *ngIf="user.city">📍 {{ user.city }}</p>
+        <span class="user-type">
+          {{ user.type === 'gamer' ? '🎮' : user.type === 'sports' ? '⚽' : '🎮⚽' }}
+        </span>
+      </div>
+      <div class="user-stats">
+        <span>⭐ {{ user.rating }}</span>
+        <span>🏆 {{ user.wins }} pobeda</span>
+      </div>
+      <div class="user-actions" *ngIf="currentUser$ | async as currentUser">
+        <button
+          *ngIf="currentUser.id !== user.id && !friendAdded[user.id]"
+          class="btn btn-secondary"
+          (click)="addFriend(user.id)">
+          + Dodaj prijatelja
+        </button>
+        <span *ngIf="friendAdded[user.id]" class="added-badge">✅ Zahtev poslat!</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="users.length === 0" class="empty-state">
+    <p>Nema igrača koji odgovaraju pretrazi.</p>
+  </div>
+</div>

@@ -38,4 +38,16 @@ export class UsersService {
   addFriend(userId: number, friendId: number): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${userId}/friends/${friendId}`, {});
   }
+
+  sendFriendRequest(userId: number): Observable<any> {
+  return this.http.post(`${this.apiUrl}/${userId}/friend-request`, {});
+}
+
+getFriendRequests(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/friend-requests`);
+}
+
+respondToFriendRequest(requestId: number, status: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/friend-requests/${requestId}`, { status });
+}
 }

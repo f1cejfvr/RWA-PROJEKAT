@@ -13,6 +13,7 @@ import { EventsModule } from './events/events.module';
 import { TeamsModule } from './teams/teams.module';
 import { MessagesModule } from './messages/messages.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { FriendRequest } from './users/friend-request.entity';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { NotificationsModule } from './notifications/notifications.module';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
-        entities: [User, Event, Application, Team, Message, Notification],
+        entities: [User, Event, Application, Team, Message, Notification, FriendRequest],
         synchronize: true,
       }),
       inject: [ConfigService],

@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Delete, Param, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, Body, UseGuards, Request, Post } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
@@ -47,5 +47,23 @@ export class UsersController {
   @Put(':id/friends/:friendId')
   addFriend(@Param('id') id: string, @Param('friendId') friendId: string) {
     return this.usersService.addFriend(+id, +friendId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':id/friend-request')
+  sendFriendRequest(@Param('id') id: string, @Request() req: { user: { userId: number } }) {
+    return this.usersService.sendFriendRequest(req.user.userId, +id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('friend-requests')
+  getFriendRequests(@Request() req: { user: { userId: number } }) {
+    return this.usersService.getFriendRequests(req.user.userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('friend-requests/:requestId')
+  respondToFriendRequest(@Param('requestId') requestId: string, @Body('status') status: string) {
+    return this.usersService.respondToFriendRequest(+requestId, status);
   }
 }
