@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil, take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -18,7 +18,7 @@ import { User } from '../../../models/user.model';
 export class UserSearch implements OnInit, OnDestroy {
   users: User[] = [];
   searchQuery = '';
-  friendAdded: { [key: number]: boolean } = {};
+  sentRequests: number[] = [];
   currentUser$: Observable<{ id: number; email: string; username: string } | null>;
   private destroy$ = new Subject<void>();
   private search$ = new Subject<string>();
@@ -34,6 +34,11 @@ export class UserSearch implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.usersService.getAll().subscribe((users) => {
       this.users = users;
+      this.cdr.detectChanges();
+    });
+
+    this.usersService.getSentFriendRequests().subscribe((requests) => {
+      this.sentRequests = requests.map((r) => r.receiver.id);
       this.cdr.detectChanges();
     });
 
@@ -58,7 +63,7 @@ export class UserSearch implements OnInit, OnDestroy {
 
   addFriend(userId: number): void {
     this.usersService.sendFriendRequest(userId).subscribe(() => {
-      this.friendAdded[userId] = true;
+      this.sentRequests.push(userId);
       this.cdr.detectChanges();
     });
   }

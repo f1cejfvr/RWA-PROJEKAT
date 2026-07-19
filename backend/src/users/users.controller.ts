@@ -66,4 +66,10 @@ export class UsersController {
   respondToFriendRequest(@Param('requestId') requestId: string, @Body('status') status: string) {
     return this.usersService.respondToFriendRequest(+requestId, status);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('friend-requests/sent')
+  getSentFriendRequests(@Request() req: { user: { userId: number } }) {
+    return this.usersService.getSentFriendRequests(req.user.userId);
+  }
 }

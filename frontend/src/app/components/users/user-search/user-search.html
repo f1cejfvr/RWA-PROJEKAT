@@ -28,12 +28,12 @@
       </div>
       <div class="user-actions" *ngIf="currentUser$ | async as currentUser">
         <button
-          *ngIf="currentUser.id !== user.id && !friendAdded[user.id]"
+          *ngIf="currentUser.id !== user.id && !sentRequests.includes(user.id)"
           class="btn btn-secondary"
           (click)="addFriend(user.id)">
           + Dodaj prijatelja
         </button>
-        <span *ngIf="friendAdded[user.id]" class="added-badge">✅ Zahtev poslat!</span>
+        <span *ngIf="sentRequests.includes(user.id)" class="added-badge">✅ Zahtev poslat!</span>
       </div>
     </div>
   </div>

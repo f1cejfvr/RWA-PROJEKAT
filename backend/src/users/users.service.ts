@@ -86,4 +86,10 @@ export class UsersService {
 
     return request;
   }
+
+  async getSentFriendRequests(userId: number): Promise<FriendRequest[]> {
+    return this.friendRequestRepository.find({
+      where: { sender: { id: userId } },
+    });
+  }
 }

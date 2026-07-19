@@ -50,4 +50,8 @@ getFriendRequests(): Observable<any[]> {
 respondToFriendRequest(requestId: number, status: string): Observable<any> {
   return this.http.put(`${this.apiUrl}/friend-requests/${requestId}`, { status });
 }
+
+getSentFriendRequests(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/friend-requests/sent`);
+}
 }

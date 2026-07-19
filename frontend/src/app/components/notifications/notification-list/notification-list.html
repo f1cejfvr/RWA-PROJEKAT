@@ -1,1 +1,51 @@
-<p>notification-list works!</p>
+<div class="container">
+  <div class="page-header">
+    <h1>Notifikacije</h1>
+    <button class="btn btn-secondary" (click)="markAllAsRead()" *ngIf="notifications.length > 0">
+      Označi sve kao pročitano
+    </button>
+  </div>
+
+  <div class="friend-requests-section" *ngIf="friendRequests.length > 0">
+    <h3>Zahtevi za prijateljstvo ({{ friendRequests.length }})</h3>
+    <div class="friend-request-list">
+      <div *ngFor="let request of friendRequests" class="friend-request-item">
+        <div class="request-info">
+          <div class="request-avatar">{{ request.sender?.username[0].toUpperCase() }}</div>
+          <span>{{ request.sender?.username }} želi da te doda kao prijatelja</span>
+        </div>
+        <div class="request-actions">
+          <button class="btn btn-primary btn-sm" (click)="respondToFriendRequest(request.id, 'accepted')">
+            ✅ Prihvati
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="respondToFriendRequest(request.id, 'rejected')">
+            ❌ Odbij
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notifications-section">
+    <h3>Obaveštenja</h3>
+    <div *ngIf="notifications.length === 0" class="empty-state">
+      <p>Nema novih obaveštenja.</p>
+    </div>
+    <div class="notifications-list">
+      <div *ngFor="let notification of notifications" class="notification-item" [class.unread]="!notification.isRead">
+        <div class="notification-content">
+          <p>{{ notification.content }}</p>
+          <span class="notification-date">{{ notification.createdAt | date: 'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+        <div class="notification-actions">
+          <button *ngIf="!notification.isRead" class="btn btn-sm btn-secondary" (click)="markAsRead(notification.id)">
+            Pročitano
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deleteNotification(notification.id)">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
