@@ -19,6 +19,7 @@ export class UserSearch implements OnInit, OnDestroy {
   users: User[] = [];
   searchQuery = '';
   sentRequests: number[] = [];
+  selectedUser: User | null = null;
   currentUser$: Observable<{ id: number; email: string; username: string } | null>;
   private destroy$ = new Subject<void>();
   private search$ = new Subject<string>();
@@ -66,6 +67,16 @@ export class UserSearch implements OnInit, OnDestroy {
       this.sentRequests.push(userId);
       this.cdr.detectChanges();
     });
+  }
+
+  openProfile(user: User): void {
+    this.selectedUser = user;
+    this.cdr.detectChanges();
+  }
+
+  closeProfile(): void {
+    this.selectedUser = null;
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {

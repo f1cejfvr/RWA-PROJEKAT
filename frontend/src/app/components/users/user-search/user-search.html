@@ -13,7 +13,7 @@
   </div>
 
   <div class="users-grid">
-    <div *ngFor="let user of users" class="user-card">
+    <div *ngFor="let user of users" class="user-card" (click)="openProfile(user)">
       <div class="user-avatar">{{ user.username[0].toUpperCase() }}</div>
       <div class="user-info">
         <h3>{{ user.username }}</h3>
@@ -30,7 +30,7 @@
         <button
           *ngIf="currentUser.id !== user.id && !sentRequests.includes(user.id)"
           class="btn btn-secondary"
-          (click)="addFriend(user.id)">
+          (click)="addFriend(user.id); $event.stopPropagation()">
           + Dodaj prijatelja
         </button>
         <span *ngIf="sentRequests.includes(user.id)" class="added-badge">✅ Zahtev poslat!</span>
@@ -40,5 +40,32 @@
 
   <div *ngIf="users.length === 0" class="empty-state">
     <p>Nema igrača koji odgovaraju pretrazi.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="selectedUser" (click)="closeProfile()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeProfile()">✕</button>
+    <div class="modal-avatar">{{ selectedUser.username[0].toUpperCase() }}</div>
+    <h2>{{ selectedUser.username }}</h2>
+    <p *ngIf="selectedUser.city">📍 {{ selectedUser.city }}</p>
+    <span class="user-type">
+      {{ selectedUser.type === 'gamer' ? '🎮 Gamer' : selectedUser.type === 'sports' ? '⚽ Sportista' : '🎮⚽ Gamer & Sportista' }}
+    </span>
+    <div class="modal-stats">
+      <div class="stat-item">
+        <span class="stat-value">{{ selectedUser.rating }}</span>
+        <span class="stat-label">Rating</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{ selectedUser.matchesPlayed }}</span>
+        <span class="stat-label">Mečevi</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">{{ selectedUser.wins }}</span>
+        <span class="stat-label">Pobede</span>
+      </div>
+    </div>
+    <p *ngIf="selectedUser.bio" class="modal-bio">{{ selectedUser.bio }}</p>
   </div>
 </div>
