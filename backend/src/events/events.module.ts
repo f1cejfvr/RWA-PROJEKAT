@@ -4,9 +4,10 @@ import { EventsService } from './events.service';
 import { EventsController } from './events.controller';
 import { Event } from './event.entity';
 import { Application } from './application.entity';
+import { NotificationsModule } from 'src/notifications/notifications.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, Application])],
+  imports: [TypeOrmModule.forFeature([Event, Application]), NotificationsModule],
   providers: [EventsService],
   controllers: [EventsController],
   exports: [EventsService],

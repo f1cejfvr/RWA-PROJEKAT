@@ -71,7 +71,7 @@
                 Prijavi tim: {{ team.name }}
               </option>
             </select>
-            <button class="btn btn-primary" (click)="onApply(event.id)" [disabled]="event.status !== 'open || isAlreadyApplied'">
+            <button class="btn btn-primary" (click)="onApply(event.id)" [disabled]="event.status !== 'open' || isAlreadyApplied">
               {{ isAlreadyApplied ? 'Već ste prijavljeni' : event.status === 'open' ? 'Prijavi se' : 'Prijave zatvorene' }}
             </button>
           </div>

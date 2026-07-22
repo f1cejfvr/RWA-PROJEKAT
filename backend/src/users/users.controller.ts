@@ -20,6 +20,24 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('friend-requests')
+  getFriendRequests(@Request() req: { user: { userId: number } }) {
+    return this.usersService.getFriendRequests(req.user.userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('friend-requests/sent')
+  getSentFriendRequests(@Request() req: { user: { userId: number } }) {
+    return this.usersService.getSentFriendRequests(req.user.userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('friend-requests/:requestId')
+  respondToFriendRequest(@Param('requestId') requestId: string, @Body('status') status: string) {
+    return this.usersService.respondToFriendRequest(+requestId, status);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
@@ -53,23 +71,5 @@ export class UsersController {
   @Post(':id/friend-request')
   sendFriendRequest(@Param('id') id: string, @Request() req: { user: { userId: number } }) {
     return this.usersService.sendFriendRequest(req.user.userId, +id);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('friend-requests')
-  getFriendRequests(@Request() req: { user: { userId: number } }) {
-    return this.usersService.getFriendRequests(req.user.userId);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Put('friend-requests/:requestId')
-  respondToFriendRequest(@Param('requestId') requestId: string, @Body('status') status: string) {
-    return this.usersService.respondToFriendRequest(+requestId, status);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('friend-requests/sent')
-  getSentFriendRequests(@Request() req: { user: { userId: number } }) {
-    return this.usersService.getSentFriendRequests(req.user.userId);
   }
 }

@@ -5,6 +5,7 @@ import { Event } from './event.entity';
 import { Application } from './application.entity';
 import { User } from '../users/user.entity';
 import { Team } from '../teams/team.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class EventsService {
@@ -13,6 +14,7 @@ export class EventsService {
     private eventRepository: Repository<Event>,
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
+    private notificationsService: NotificationsService,
   ) {}
 
   async findAll(filters?: { category?: string; city?: string; type?: string }): Promise<Event[]> {
@@ -52,7 +54,11 @@ export class EventsService {
   }
 
   async apply(eventId: number, applicant: User, message?: string, teamId?: number): Promise<Application> {
-    const event = await this.findOne(eventId);
+    const event = await this.eventRepository.findOne({
+      where: { id: eventId },
+      relations: { organizer: true },
+    });
+    if (!event) throw new NotFoundException('Event nije pronađen');
 
     const existingApplication = await this.applicationRepository.findOne({
       where: { event: { id: eventId }, applicant: { id: applicant.id } },
@@ -73,7 +79,16 @@ export class EventsService {
       application.team = { id: teamId } as Team;
     }
 
-    return this.applicationRepository.save(application);
+    const savedApplication = await this.applicationRepository.save(application);
+
+    await this.notificationsService.create(
+      `${applicant.username || applicant.email} se prijavio na tvoj event: ${event.title}`,
+      'event_application',
+      event.organizer,
+      event.id,
+    );
+
+    return savedApplication;
   }
 
   async getApplications(eventId: number): Promise<Application[]> {
@@ -84,8 +99,20 @@ export class EventsService {
 
   async updateApplicationStatus(applicationId: number, status: string): Promise<Application> {
     await this.applicationRepository.update(applicationId, { status });
-    const application = await this.applicationRepository.findOne({ where: { id: applicationId } });
+    const application = await this.applicationRepository.findOne({
+      where: { id: applicationId },
+      relations: { applicant: true, event: true },
+    });
     if (!application) throw new NotFoundException('Prijava nije pronađena');
+
+    const statusText = status === 'accepted' ? 'prihvaćena' : 'odbijena';
+    await this.notificationsService.create(
+      `Tvoja prijava na event "${application.event?.title}" je ${statusText}`,
+      'event_application',
+      application.applicant,
+      application.event?.id,
+    );
+
     return application;
   }
 }
