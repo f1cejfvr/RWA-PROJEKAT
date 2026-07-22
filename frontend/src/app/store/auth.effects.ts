@@ -32,7 +32,7 @@ export class AuthEffects {
           password: action.password,
           username: action.username,
           city: action.city,
-          type: action.type,
+          type: action.playerType,
         }).pipe(
           map((response) => registerSuccess({ token: response.access_token, user: response.user })),
           catchError((error) => of(registerFailure({ error: error.message }))),

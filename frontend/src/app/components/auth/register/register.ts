@@ -31,7 +31,7 @@ export class Register {
         password: this.password,
         username: this.username,
         city: this.city,
-        type: this.type,
+        playerType: this.type,
       }));
     }
   }

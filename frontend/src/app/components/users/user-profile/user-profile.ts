@@ -75,4 +75,17 @@ export class UserProfile implements OnInit {
     this.isEditing = false;
     this.editData = {};
   }
+
+  onDeleteProfile(): void {
+    if(confirm('Da li si siguran da želiš da obrišeš profil?')){
+      this.user$.subscribe((user) => {
+        if(user) {
+          this.usersService.remove(user.id).subscribe(() => {
+            localStorage.clear();
+            window.location.href = '/';
+          });
+        }
+      });
+    }
+  }
 }

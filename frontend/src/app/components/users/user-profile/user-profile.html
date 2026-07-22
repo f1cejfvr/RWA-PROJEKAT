@@ -11,7 +11,10 @@
             {{ profile.type === 'gamer' ? '🎮 Gamer' : profile.type === 'sports' ? '⚽ Sportista' : '🎮⚽ Gamer & Sportista' }}
           </span>
         </div>
-        <button class="btn btn-primary" (click)="onEdit()">✏️ Uredi profil</button>
+        <div class="profile-actions">
+          <button class="btn btn-primary" (click)="onEdit()">✏️ Uredi profil</button>
+          <button class="btn btn-danger" (click)="onDeleteProfile()">🗑️ Obriši profil</button>
+        </div>
       </div>
 
       <div class="profile-stats">
