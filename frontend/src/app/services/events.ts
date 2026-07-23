@@ -36,7 +36,7 @@ export class EventsService {
   }
 
   apply(eventId: number, message?: string, teamId?: number): Observable<Application> {
-  return this.http.post<Application>(`${this.apiUrl}/${eventId}/apply`, { message, teamId });
+    return this.http.post<Application>(`${this.apiUrl}/${eventId}/apply`, { message, teamId });
   }
 
   getApplications(eventId: number): Observable<Application[]> {
@@ -45,5 +45,38 @@ export class EventsService {
 
   updateApplicationStatus(applicationId: number, status: string): Observable<Application> {
     return this.http.put<Application>(`${this.apiUrl}/applications/${applicationId}/status`, { status });
+  }
+
+  async getAllWithFetch(filters?: { category?: string; city?: string; type?: string }): Promise<Event[]> {
+    const params = new URLSearchParams();
+    if (filters?.category) params.set('category', filters.category);
+    if (filters?.city) params.set('city', filters.city);
+    if (filters?.type) params.set('type', filters.type);
+
+    const token = localStorage.getItem('access_token');
+    const response = await fetch(`${this.apiUrl}?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token ?? ''}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Greška pri učitavanju evenata');
+    }
+
+    return response.json() as Promise<Event[]>;
+  }
+
+  checkEventAvailability(eventId: number): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.getOne(eventId).subscribe({
+        next: (event) => {
+          resolve(event.status === 'open');
+        },
+        error: (err) => {
+          reject(err);
+        },
+      });
+    });
   }
 }

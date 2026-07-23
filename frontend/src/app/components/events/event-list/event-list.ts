@@ -9,6 +9,7 @@ import { loadEvents } from '../../../store/events.actions';
 import { selectAllEvents, selectEventsLoading } from '../../../store/events.selectors';
 import { Event } from '../../../models/event.model';
 import { selectIsLoggedIn } from '../../../store/auth.selectors';
+import { EventsService } from '../../../services/events';
 
 @Component({
   selector: 'app-event-list',
@@ -27,7 +28,10 @@ export class EventList implements OnInit, OnDestroy {
   cityFilter = '';
   typeFilter = '';
 
-  constructor(private store: Store) {
+  constructor(
+    private store: Store,
+    private eventsService: EventsService,
+  ) {
     this.events$ = this.store.select(selectAllEvents);
     this.loading$ = this.store.select(selectEventsLoading);
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
@@ -35,6 +39,20 @@ export class EventList implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(loadEvents({}));
+
+    // FETCH API demonstracija
+    this.eventsService.getAllWithFetch().then((events) => {
+      console.log('Eventi učitani via Fetch API:', events);
+    }).catch((err) => {
+      console.error('Greška pri Fetch API:', err);
+    });
+
+    // PROMISE demonstracija
+    this.eventsService.checkEventAvailability(1).then((available) => {
+      console.log('Event dostupan:', available);
+    }).catch((err) => {
+      console.error('Greška pri Promise:', err);
+    });
 
     this.citySearch$.pipe(
       debounceTime(300),
