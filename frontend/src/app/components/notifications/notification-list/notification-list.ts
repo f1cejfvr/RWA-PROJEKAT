@@ -1,5 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { merge } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { NotificationsService } from '../../../services/notifications';
 import { UsersService } from '../../../services/users';
 import { TeamsService } from '../../../services/teams';
@@ -24,9 +26,45 @@ export class NotificationList implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadNotifications();
-    this.loadFriendRequests();
+    // MERGE - spaja više Observable-a u jedan stream
+    // Notifikacije i friend requestovi se učitavaju paralelno
+    merge(
+      this.notificationsService.getMyNotifications().pipe(
+        tap((notifications) => {
+          this.notifications = notifications;
+          this.cdr.detectChanges();
+        }),
+      ),
+      this.usersService.getFriendRequests().pipe(
+        tap((requests) => {
+          this.friendRequests = requests;
+          this.cdr.detectChanges();
+        }),
+      ),
+    ).subscribe();
+
     this.loadTeamJoinRequests();
+  }
+
+  loadTeamJoinRequests(): void {
+    this.notificationsService.getMyNotifications().subscribe((notifications) => {
+      const teamNotifications = notifications.filter((n) => n.type === 'team_join_request' && !n.isRead);
+      if (teamNotifications.length > 0) {
+        const teamIds = [...new Set(teamNotifications.map((n) => n.referenceId).filter(Boolean))];
+        const requests: any[] = [];
+        let loaded = 0;
+        teamIds.forEach((teamId) => {
+          this.teamsService.getJoinRequests(teamId!).subscribe((reqs) => {
+            requests.push(...reqs);
+            loaded++;
+            if (loaded === teamIds.length) {
+              this.teamJoinRequests = requests;
+              this.cdr.detectChanges();
+            }
+          });
+        });
+      }
+    });
   }
 
   loadNotifications(): void {
@@ -40,27 +78,6 @@ export class NotificationList implements OnInit {
     this.usersService.getFriendRequests().subscribe((requests) => {
       this.friendRequests = requests;
       this.cdr.detectChanges();
-    });
-  }
-
-  loadTeamJoinRequests(): void {
-    this.notificationsService.getMyNotifications().subscribe((notifications) => {
-      const teamNotifications = notifications.filter(n => n.type === 'team_join_request' && !n.isRead);
-      if (teamNotifications.length > 0) {
-        const teamIds = [...new Set(teamNotifications.map(n => n.referenceId).filter(Boolean))];
-        const requests: any[] = [];
-        let loaded = 0;
-        teamIds.forEach(teamId => {
-          this.teamsService.getJoinRequests(teamId!).subscribe((reqs) => {
-            requests.push(...reqs);
-            loaded++;
-            if (loaded === teamIds.length) {
-              this.teamJoinRequests = requests;
-              this.cdr.detectChanges();
-            }
-          });
-        });
-      }
     });
   }
 

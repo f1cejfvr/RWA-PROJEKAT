@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { zip } from 'rxjs';
 import { AsyncPipe, NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -32,11 +33,11 @@ export class UserProfile implements OnInit {
   ngOnInit(): void {
     this.user$.subscribe((user) => {
       if (user) {
-        this.usersService.getOne(user.id).subscribe((profile) => {
+        zip(
+          this.usersService.getOne(user.id),
+          this.usersService.getFriends(user.id),
+        ).subscribe(([profile, friends]) => {
           this.profile = profile;
-          this.cdr.detectChanges();
-        });
-        this.usersService.getFriends(user.id).subscribe((friends) => {
           this.friends = friends;
           this.cdr.detectChanges();
         });
@@ -77,9 +78,9 @@ export class UserProfile implements OnInit {
   }
 
   onDeleteProfile(): void {
-    if(confirm('Da li si siguran da želiš da obrišeš profil?')){
+    if (confirm('Da li si siguran da želiš da obrišeš profil?')) {
       this.user$.subscribe((user) => {
-        if(user) {
+        if (user) {
           this.usersService.remove(user.id).subscribe(() => {
             localStorage.clear();
             window.location.href = '/';
