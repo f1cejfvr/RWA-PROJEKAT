@@ -26,6 +26,26 @@
     </div>
   </div>
 
+  <div class="friend-requests-section" *ngIf="teamJoinRequests.length > 0">
+    <h3>Zahtevi za tim ({{ teamJoinRequests.length }})</h3>
+    <div class="friend-request-list">
+      <div *ngFor="let request of teamJoinRequests" class="friend-request-item">
+        <div class="request-info">
+          <div class="request-avatar">{{ request.applicant?.username[0].toUpperCase() }}</div>
+          <span>{{ request.applicant?.username }} želi da se pridruži timu {{ request.team?.name }}</span>
+        </div>
+        <div class="request-actions">
+          <button class="btn btn-primary btn-sm" (click)="respondToTeamJoinRequest(request.id, 'accepted')">
+            ✅ Prihvati
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="respondToTeamJoinRequest(request.id, 'rejected')">
+            ❌ Odbij
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="notifications-section">
     <h3>Obaveštenja</h3>
     <div *ngIf="notifications.length === 0" class="empty-state">

@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { NotificationsService } from '../../../services/notifications';
 import { UsersService } from '../../../services/users';
+import { TeamsService } from '../../../services/teams';
 import { Notification } from '../../../models/notification.model';
 
 @Component({
@@ -13,16 +14,19 @@ import { Notification } from '../../../models/notification.model';
 export class NotificationList implements OnInit {
   notifications: Notification[] = [];
   friendRequests: any[] = [];
+  teamJoinRequests: any[] = [];
 
   constructor(
     private notificationsService: NotificationsService,
     private usersService: UsersService,
+    private teamsService: TeamsService,
     private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.loadNotifications();
     this.loadFriendRequests();
+    this.loadTeamJoinRequests();
   }
 
   loadNotifications(): void {
@@ -36,6 +40,27 @@ export class NotificationList implements OnInit {
     this.usersService.getFriendRequests().subscribe((requests) => {
       this.friendRequests = requests;
       this.cdr.detectChanges();
+    });
+  }
+
+  loadTeamJoinRequests(): void {
+    this.notificationsService.getMyNotifications().subscribe((notifications) => {
+      const teamNotifications = notifications.filter(n => n.type === 'team_join_request' && !n.isRead);
+      if (teamNotifications.length > 0) {
+        const teamIds = [...new Set(teamNotifications.map(n => n.referenceId).filter(Boolean))];
+        const requests: any[] = [];
+        let loaded = 0;
+        teamIds.forEach(teamId => {
+          this.teamsService.getJoinRequests(teamId!).subscribe((reqs) => {
+            requests.push(...reqs);
+            loaded++;
+            if (loaded === teamIds.length) {
+              this.teamJoinRequests = requests;
+              this.cdr.detectChanges();
+            }
+          });
+        });
+      }
     });
   }
 
@@ -54,6 +79,13 @@ export class NotificationList implements OnInit {
   respondToFriendRequest(requestId: number, status: string): void {
     this.usersService.respondToFriendRequest(requestId, status).subscribe(() => {
       this.loadFriendRequests();
+    });
+  }
+
+  respondToTeamJoinRequest(requestId: number, status: string): void {
+    this.teamsService.respondToJoinRequest(requestId, status).subscribe(() => {
+      this.loadTeamJoinRequests();
+      this.loadNotifications();
     });
   }
 

@@ -205,3 +205,8 @@
 .back-link:hover {
   text-decoration: underline;
 }
+
+.success-badge {
+  color: #2e7d32;
+  font-size: 0.9rem;
+}

@@ -65,7 +65,7 @@ export class TeamsEffects {
     this.actions$.pipe(
       ofType(joinTeam),
       switchMap(({ teamId }) =>
-        this.teamsService.joinTeam(teamId).pipe(
+        this.teamsService.requestToJoin(teamId).pipe(
           map((team) => joinTeamSuccess({ team })),
           catchError((error) => of(joinTeamFailure({ error: error.message }))),
         ),

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AsyncPipe, NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { loadTeam, joinTeam } from '../../../store/teams.actions';
+import { loadTeam } from '../../../store/teams.actions';
 import { selectSelectedTeam } from '../../../store/teams.selectors';
 import { selectUser } from '../../../store/auth.selectors';
 import { Team } from '../../../models/team.model';
@@ -25,6 +25,7 @@ export class TeamDetail implements OnInit {
   newMessage = '';
   isEditing = false;
   editData: Partial<Team> = {};
+  joinRequestSent = false;
 
   constructor(
     private store: Store,
@@ -32,6 +33,7 @@ export class TeamDetail implements OnInit {
     private router: Router,
     private teamsService: TeamsService,
     private messagesService: MessagesService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.team$ = this.store.select(selectSelectedTeam);
     this.user$ = this.store.select(selectUser);
@@ -48,11 +50,15 @@ export class TeamDetail implements OnInit {
   loadMessages(teamId: number): void {
     this.messagesService.getTeamMessages(teamId).subscribe((messages) => {
       this.messages = messages;
+      this.cdr.detectChanges();
     });
   }
 
   onJoin(teamId: number): void {
-    this.store.dispatch(joinTeam({ teamId }));
+    this.teamsService.requestToJoin(teamId).subscribe(() => {
+      this.joinRequestSent = true;
+      this.cdr.detectChanges();
+    });
   }
 
   onLeave(teamId: number, userId: number): void {
@@ -93,6 +99,7 @@ export class TeamDetail implements OnInit {
       this.messagesService.sendMessage(teamId, this.newMessage).subscribe((message) => {
         this.messages = [...this.messages, message];
         this.newMessage = '';
+        this.cdr.detectChanges();
       });
     }
   }
@@ -102,9 +109,9 @@ export class TeamDetail implements OnInit {
   }
 
   onToggleStatus(teamId: number, currentStatus: string): void {
-  const newStatus = currentStatus === 'open' ? 'closed' : 'open';
-  this.teamsService.update(teamId, { status: newStatus }).subscribe(() => {
-    this.store.dispatch(loadTeam({ id: teamId }));
-  });
+    const newStatus = currentStatus === 'open' ? 'closed' : 'open';
+    this.teamsService.update(teamId, { status: newStatus }).subscribe(() => {
+      this.store.dispatch(loadTeam({ id: teamId }));
+    });
   }
 }

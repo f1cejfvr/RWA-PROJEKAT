@@ -34,8 +34,16 @@ export class TeamsService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  joinTeam(teamId: number): Observable<Team> {
-    return this.http.post<Team>(`${this.apiUrl}/${teamId}/members`, {});
+  requestToJoin(teamId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${teamId}/join-request`, {});
+  }
+
+  getJoinRequests(teamId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${teamId}/join-requests`);
+  }
+
+  respondToJoinRequest(requestId: number, status: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/join-requests/${requestId}`, { status });
   }
 
   leaveTeam(teamId: number, userId: number): Observable<Team> {

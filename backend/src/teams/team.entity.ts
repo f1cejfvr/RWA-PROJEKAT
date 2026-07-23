@@ -13,7 +13,7 @@ export class Team {
   description: string;
 
   @Column()
-  category: string; // 'gaming', 'sports'
+  category: string;
 
   @Column({ nullable: true })
   game: string;
@@ -25,7 +25,7 @@ export class Team {
   city: string;
 
   @Column({ default: 'open' })
-  status: string; // 'open', 'closed'
+  status: string;
 
   @CreateDateColumn()
   createdAt: Date;

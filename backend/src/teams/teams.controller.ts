@@ -13,6 +13,12 @@ export class TeamsController {
     return this.teamsService.findAll({ category, city });
   }
 
+  @Get(':id/join-requests')
+  @UseGuards(AuthGuard('jwt'))
+  getJoinRequests(@Param('id') id: string) {
+    return this.teamsService.getJoinRequests(+id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.teamsService.findOne(+id);
@@ -38,10 +44,16 @@ export class TeamsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post(':id/members')
-  addMember(@Param('id') id: string, @Request() req: { user: { userId: number; email: string } }) {
-    const user = { id: req.user.userId, email: req.user.email } as User;
-    return this.teamsService.addMember(+id, user);
+  @Post(':id/join-request')
+  requestToJoin(@Param('id') id: string, @Request() req: { user: { userId: number; email: string } }) {
+    const applicant = { id: req.user.userId, email: req.user.email } as User;
+    return this.teamsService.requestToJoin(+id, applicant);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('join-requests/:requestId')
+  respondToJoinRequest(@Param('requestId') requestId: string, @Body('status') status: string) {
+    return this.teamsService.respondToJoinRequest(+requestId, status);
   }
 
   @UseGuards(AuthGuard('jwt'))

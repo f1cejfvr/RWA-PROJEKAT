@@ -47,16 +47,19 @@
 
       <div class="team-actions" *ngIf="user$ | async as user">
         <ng-container *ngIf="user.id === team.captain?.id; else memberActions">
-            <button class="btn btn-primary" (click)="onEdit(team)">✏️ Uredi tim</button>
-            <button class="btn btn-secondary" (click)="onToggleStatus(team.id, team.status)">
-                {{ team.status === 'open' ? '🔒 Zatvori primanje' : '🔓 Otvori primanje' }}
-            </button>
-            <button class="btn btn-danger" (click)="onDelete(team.id)">🗑️ Obriši tim</button>
+          <button class="btn btn-primary" (click)="onEdit(team)">✏️ Uredi tim</button>
+          <button class="btn btn-secondary" (click)="onToggleStatus(team.id, team.status)">
+            {{ team.status === 'open' ? '🔒 Zatvori primanje' : '🔓 Otvori primanje' }}
+          </button>
+          <button class="btn btn-danger" (click)="onDelete(team.id)">🗑️ Obriši tim</button>
         </ng-container>
         <ng-template #memberActions>
-          <button *ngIf="!isMember(team, user.id)" class="btn btn-primary" (click)="onJoin(team.id)" [disabled]="team.status !== 'open'">
-            {{ team.status === 'open' ? 'Pridruži se' : 'Tim je popunjen' }}
-          </button>
+          <ng-container *ngIf="!isMember(team, user.id)">
+            <button *ngIf="!joinRequestSent" class="btn btn-primary" (click)="onJoin(team.id)" [disabled]="team.status !== 'open'">
+              {{ team.status === 'open' ? 'Zatraži pristup' : 'Tim je popunjen' }}
+            </button>
+            <span *ngIf="joinRequestSent" class="success-badge">✅ Zahtev poslat!</span>
+          </ng-container>
           <button *ngIf="isMember(team, user.id)" class="btn btn-secondary" (click)="onLeave(team.id, user.id)">
             Napusti tim
           </button>
