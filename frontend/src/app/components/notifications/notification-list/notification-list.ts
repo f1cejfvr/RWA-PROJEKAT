@@ -26,8 +26,6 @@ export class NotificationList implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // MERGE - spaja više Observable-a u jedan stream
-    // Notifikacije i friend requestovi se učitavaju paralelno
     merge(
       this.notificationsService.getMyNotifications().pipe(
         tap((notifications) => {

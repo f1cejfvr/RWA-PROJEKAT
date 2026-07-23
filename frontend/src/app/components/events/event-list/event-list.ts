@@ -40,18 +40,16 @@ export class EventList implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(loadEvents({}));
 
-    // FETCH API demonstracija
     this.eventsService.getAllWithFetch().then((events) => {
-      console.log('Eventi učitani via Fetch API:', events);
+      console.log('Eventi ucitani via Fetch API:', events);
     }).catch((err) => {
-      console.error('Greška pri Fetch API:', err);
+      console.error('Greska pri Fetch API:', err);
     });
 
-    // PROMISE demonstracija
     this.eventsService.checkEventAvailability(1).then((available) => {
       console.log('Event dostupan:', available);
     }).catch((err) => {
-      console.error('Greška pri Promise:', err);
+      console.error('Greska pri Promise:', err);
     });
 
     this.citySearch$.pipe(

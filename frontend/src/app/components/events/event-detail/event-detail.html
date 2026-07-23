@@ -1,16 +1,16 @@
 <div class="container" *ngIf="event">
   <div class="event-detail-card">
 
-    <a routerLink="/events" class="back-link">← Nazad na evente</a>
+    <a routerLink="/events" class="back-link">Nazad na evente</a>
 
     <ng-container *ngIf="!isEditing; else editForm">
       <div class="event-detail-header">
         <div>
           <span class="event-category">
-            {{ event.category === 'gaming' ? '🎮' : '⚽' }} {{ event.category }}
+            {{ event.category === 'gaming' ? 'Igrice' : 'Sport' }} {{ event.category }}
           </span>
           <span class="event-type">
-            {{ event.type === 'tournament' ? '🏆 Turnir' : '🎯 Casual' }}
+            {{ event.type === 'tournament' ? 'Turnir' : 'Casual' }}
           </span>
         </div>
         <span class="event-status" [class.open]="event.status === 'open'">
@@ -36,33 +36,33 @@
         </div>
         <div class="meta-item" *ngIf="event.city">
           <span class="meta-label">Grad</span>
-          <span>📍 {{ event.city }}</span>
+          <span> {{ event.city }}</span>
         </div>
         <div class="meta-item" *ngIf="event.location">
           <span class="meta-label">Lokacija</span>
           <span>{{ event.location }}</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Maks. igrača</span>
-          <span>👥 {{ event.maxPlayers }}</span>
+          <span class="meta-label">Maks. igraca</span>
+          <span> {{ event.maxPlayers }}</span>
         </div>
         <div class="meta-item" *ngIf="event.date">
           <span class="meta-label">Datum</span>
-          <span>📅 {{ event.date | date: 'dd.MM.yyyy HH:mm' }}</span>
+          <span> {{ event.date | date: 'dd.MM.yyyy HH:mm' }}</span>
         </div>
       </div>
 
       <div class="event-actions" *ngIf="user$ | async as user">
         <ng-container *ngIf="user.id === event.organizer?.id; else playerActions">
-          <button class="btn btn-primary" (click)="onEdit(event)">✏️ Uredi event</button>
+          <button class="btn btn-primary" (click)="onEdit(event)"> Uredi event</button>
           <button class="btn btn-secondary" (click)="onToggleApplications(event.id, event.status)">
-            {{ event.status === 'open' ? '🔒 Zatvori prijave' : '🔓 Otvori prijave' }}
+            {{ event.status === 'open' ? 'Zatvori prijave' : 'Otvori prijave' }}
           </button>
-          <button class="btn btn-danger" (click)="onDelete(event.id)">🗑️ Obriši event</button>
+          <button class="btn btn-danger" (click)="onDelete(event.id)">Obrisi event</button>
         </ng-container>
         <ng-template #playerActions>
           <div *ngIf="applySuccess" class="success-message">
-            ✅ Uspešno ste se prijavili!
+            Uspesno ste se prijavili!
           </div>
           <div class="apply-section">
             <select [(ngModel)]="selectedTeamId" *ngIf="myTeams.length > 0">
@@ -72,7 +72,7 @@
               </option>
             </select>
             <button class="btn btn-primary" (click)="onApply(event.id)" [disabled]="event.status !== 'open' || isAlreadyApplied">
-              {{ isAlreadyApplied ? 'Već ste prijavljeni' : event.status === 'open' ? 'Prijavi se' : 'Prijave zatvorene' }}
+              {{ isAlreadyApplied ? 'Vec ste prijavljeni' : event.status === 'open' ? 'Prijavi se' : 'Prijave zatvorene' }}
             </button>
           </div>
         </ng-template>
@@ -86,10 +86,10 @@
               Sve ({{ applications.length }})
             </button>
             <button [class.active]="applicationFilter === 'pending'" (click)="applicationFilter = 'pending'">
-              Na čekanju ({{ applications.length - filteredApplications.length + (applicationFilter === 'pending' ? filteredApplications.length : 0) }})
+              Na cekanju ({{ applications.length - filteredApplications.length + (applicationFilter === 'pending' ? filteredApplications.length : 0) }})
             </button>
             <button [class.active]="applicationFilter === 'accepted'" (click)="applicationFilter = 'accepted'">
-              Prihvaćene
+              Prihvacene
             </button>
             <button [class.active]="applicationFilter === 'rejected'" (click)="applicationFilter = 'rejected'">
               Odbijene
@@ -98,13 +98,13 @@
           <div class="applications-list">
             <div *ngFor="let app of filteredApplications" class="application-item">
               <div class="app-info">
-                <span>👤 {{ app.applicant?.username }}</span>
-                <span *ngIf="app.team">🏆 Tim: {{ app.team?.name }}</span>
-                <span *ngIf="app.message">💬 {{ app.message }}</span>
+                <span>{{ app.applicant?.username }}</span>
+                <span *ngIf="app.team">Tim: {{ app.team?.name }}</span>
+                <span *ngIf="app.message">{{ app.message }}</span>
               </div>
               <div class="app-status">
                 <span class="status-badge" [class.accepted]="app.status === 'accepted'" [class.rejected]="app.status === 'rejected'">
-                  {{ app.status === 'pending' ? 'Na čekanju' : app.status === 'accepted' ? 'Prihvaćeno' : 'Odbijeno' }}
+                  {{ app.status === 'pending' ? 'Na cekanju' : app.status === 'accepted' ? 'Prihvaceno' : 'Odbijeno' }}
                 </span>
                 <button class="btn btn-primary btn-sm" (click)="updateAppStatus(app.id, 'accepted')" *ngIf="app.status === 'pending'">Prihvati</button>
                 <button class="btn btn-danger btn-sm" (click)="updateAppStatus(app.id, 'rejected')" *ngIf="app.status === 'pending'">Odbij</button>
@@ -131,7 +131,7 @@
           <input type="text" [(ngModel)]="editData.city" />
         </div>
         <div class="form-group">
-          <label>Maks. igrača</label>
+          <label>Maks. igraca</label>
           <input type="number" [(ngModel)]="editData.maxPlayers" min="2" />
         </div>
       </div>
@@ -140,8 +140,8 @@
         <input type="text" [(ngModel)]="editData.location" />
       </div>
       <div class="form-actions">
-        <button class="btn btn-secondary" (click)="onCancelEdit()">Otkaži</button>
-        <button class="btn btn-primary" (click)="onSaveEdit(event.id)">Sačuvaj</button>
+        <button class="btn btn-secondary" (click)="onCancelEdit()">Otkazi</button>
+        <button class="btn btn-primary" (click)="onSaveEdit(event.id)">Sacuvaj</button>
       </div>
     </ng-template>
 

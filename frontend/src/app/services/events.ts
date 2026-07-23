@@ -61,7 +61,7 @@ export class EventsService {
     });
 
     if (!response.ok) {
-      throw new Error('Greška pri učitavanju evenata');
+      throw new Error('Greska pri ucitavanju evenata');
     }
 
     return response.json() as Promise<Event[]>;

@@ -13,7 +13,7 @@ export class Notification {
   isRead: boolean;
 
   @Column()
-  type: string; // 'friend_request', 'team_invite', 'event_application', 'match_result'
+  type: string;
 
   @Column({ nullable: true })
   referenceId: number;

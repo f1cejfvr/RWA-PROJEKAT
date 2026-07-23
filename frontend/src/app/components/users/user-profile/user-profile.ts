@@ -78,7 +78,7 @@ export class UserProfile implements OnInit {
   }
 
   onDeleteProfile(): void {
-    if (confirm('Da li si siguran da želiš da obrišeš profil?')) {
+    if (confirm('Da li si siguran da zelis da obrises profil?')) {
       this.user$.subscribe((user) => {
         if (user) {
           this.usersService.remove(user.id).subscribe(() => {

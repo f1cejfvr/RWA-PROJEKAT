@@ -8,12 +8,12 @@
           <h1>{{ profile.username }}</h1>
           <p class="profile-email">{{ profile.email }}</p>
           <span class="profile-type">
-            {{ profile.type === 'gamer' ? '🎮 Gamer' : profile.type === 'sports' ? '⚽ Sportista' : '🎮⚽ Gamer & Sportista' }}
+            {{ profile.type === 'gamer' ? 'Gamer' : profile.type === 'sports' ? 'Sportista' : 'Gamer & Sportista' }}
           </span>
         </div>
         <div class="profile-actions">
-          <button class="btn btn-primary" (click)="onEdit()">✏️ Uredi profil</button>
-          <button class="btn btn-danger" (click)="onDeleteProfile()">🗑️ Obriši profil</button>
+          <button class="btn btn-primary" (click)="onEdit()">Uredi profil</button>
+          <button class="btn btn-danger" (click)="onDeleteProfile()">Obrisi profil</button>
         </div>
       </div>
 
@@ -24,7 +24,7 @@
         </div>
         <div class="stat-item">
           <span class="stat-value">{{ profile.matchesPlayed }}</span>
-          <span class="stat-label">Mečevi</span>
+          <span class="stat-label">Mecevi</span>
         </div>
         <div class="stat-item">
           <span class="stat-value">{{ profile.wins }}</span>
@@ -50,7 +50,7 @@
           </div>
         </div>
         <ng-template #noFriends>
-          <p class="empty-text">Još nemaš prijatelja. Pronađi igrače!</p>
+          <p class="empty-text">Jos nemas prijatelja. Pronadji igrace!</p>
         </ng-template>
       </div>
     </ng-container>
@@ -59,13 +59,13 @@
       <h2>Uredi profil</h2>
 
       <div class="form-group">
-        <label>Korisničko ime</label>
+        <label>Korisnicko ime</label>
         <input type="text" [(ngModel)]="editData.username" />
       </div>
 
       <div class="form-group">
         <label>Bio</label>
-        <textarea [(ngModel)]="editData.bio" rows="3" placeholder="Napiši nešto o sebi..."></textarea>
+        <textarea [(ngModel)]="editData.bio" rows="3" placeholder="Napisi nesto o sebi..."></textarea>
       </div>
 
       <div class="form-group">
@@ -74,7 +74,7 @@
       </div>
 
       <div class="form-group">
-        <label>Tip igrača</label>
+        <label>Tip igraca</label>
         <select [(ngModel)]="editData.type">
           <option value="both">Gamer i sportista</option>
           <option value="gamer">Samo gamer</option>
@@ -88,7 +88,7 @@
           <input type="number" [(ngModel)]="editData.rating" min="0" />
         </div>
         <div class="form-group">
-          <label>Mečevi odigrani</label>
+          <label>Mecevi odigrani</label>
           <input type="number" [(ngModel)]="editData.matchesPlayed" min="0" />
         </div>
         <div class="form-group">
@@ -98,8 +98,8 @@
       </div>
 
       <div class="form-actions">
-        <button class="btn btn-secondary" (click)="onCancel()">Otkaži</button>
-        <button class="btn btn-primary" (click)="onSave()">Sačuvaj</button>
+        <button class="btn btn-secondary" (click)="onCancel()">Otkazi</button>
+        <button class="btn btn-primary" (click)="onSave()">Sacuvaj</button>
       </div>
     </ng-template>
 

@@ -13,10 +13,10 @@ export class Event {
   description: string;
 
   @Column()
-  type: string; // 'tournament', 'casual'
+  type: string;
 
   @Column()
-  category: string; // 'gaming', 'sports'
+  category: string;
 
   @Column({ nullable: true })
   game: string;
@@ -34,7 +34,7 @@ export class Event {
   maxPlayers: number;
 
   @Column({ default: 'open' })
-  status: string; // 'open', 'full', 'completed'
+  status: string;
 
   @Column({ nullable: true })
   date: Date;

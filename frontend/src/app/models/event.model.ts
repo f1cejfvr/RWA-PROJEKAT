@@ -2,8 +2,8 @@ export interface Event {
   id: number;
   title: string;
   description?: string;
-  type: string; // 'tournament', 'casual'
-  category: string; // 'gaming', 'sports'
+  type: string; //
+  category: string;
   game?: string;
   sport?: string;
   city?: string;

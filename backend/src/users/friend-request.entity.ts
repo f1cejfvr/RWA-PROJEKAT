@@ -7,7 +7,7 @@ export class FriendRequest {
   id: number;
 
   @Column({ default: 'pending' })
-  status: string; // 'pending', 'accepted', 'rejected'
+  status: string;
 
   @CreateDateColumn()
   createdAt: Date;

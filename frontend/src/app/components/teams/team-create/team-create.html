@@ -9,7 +9,7 @@
 
     <div class="form-group">
       <label for="description">Opis</label>
-      <textarea id="description" [(ngModel)]="description" rows="3" placeholder="Opiši tim..."></textarea>
+      <textarea id="description" [(ngModel)]="description" rows="3" placeholder="Opisi tim..."></textarea>
     </div>
 
     <div class="form-row">
@@ -34,11 +34,11 @@
 
     <div class="form-group" *ngIf="category === 'sports'">
       <label for="sport">Sport</label>
-      <input type="text" id="sport" [(ngModel)]="sport" placeholder="npr. Košarka" />
+      <input type="text" id="sport" [(ngModel)]="sport" placeholder="npr. Kosarka" />
     </div>
 
     <div class="form-actions">
-      <a routerLink="/teams" class="btn btn-secondary">Otkaži</a>
+      <a routerLink="/teams" class="btn btn-secondary">Otkazi</a>
       <button class="btn btn-primary" (click)="onSubmit()">Kreiraj tim</button>
     </div>
   </div>

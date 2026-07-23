@@ -9,7 +9,7 @@
 
     <div class="form-group">
       <label for="description">Opis</label>
-      <textarea id="description" [(ngModel)]="description" rows="3" placeholder="Opiši event..."></textarea>
+      <textarea id="description" [(ngModel)]="description" rows="3" placeholder="Opisi event..."></textarea>
     </div>
 
     <div class="form-row">
@@ -37,7 +37,7 @@
 
     <div class="form-group" *ngIf="category === 'sports'">
       <label for="sport">Sport</label>
-      <input type="text" id="sport" [(ngModel)]="sport" placeholder="npr. Košarka" />
+      <input type="text" id="sport" [(ngModel)]="sport" placeholder="npr. Kosarka" />
     </div>
 
     <div class="form-row">
@@ -47,7 +47,7 @@
       </div>
 
       <div class="form-group">
-        <label for="maxPlayers">Maks. igrača *</label>
+        <label for="maxPlayers">Maks. igraca *</label>
         <input type="number" id="maxPlayers" [(ngModel)]="maxPlayers" min="2" />
       </div>
     </div>
@@ -63,7 +63,7 @@
     </div>
 
     <div class="form-actions">
-      <a routerLink="/events" class="btn btn-secondary">Otkaži</a>
+      <a routerLink="/events" class="btn btn-secondary">Otkazi</a>
       <button class="btn btn-primary" (click)="onSubmit()">Kreiraj event</button>
     </div>
   </div>

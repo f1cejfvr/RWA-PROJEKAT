@@ -9,13 +9,13 @@ export class Application {
   id: number;
 
   @Column({ default: 'pending' })
-  status: string; // 'pending', 'accepted', 'rejected'
+  status: string;
 
   @Column({ nullable: true })
   message: string;
 
   @Column({ default: 'individual' })
-  applicationType: string; // 'individual', 'team'
+  applicationType: string;
 
   @CreateDateColumn()
   createdAt: Date;

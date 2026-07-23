@@ -37,7 +37,7 @@ export class TeamsService {
       where: { id },
       relations: { captain: true, members: true },
     });
-    if (!team) throw new NotFoundException('Tim nije pronađen');
+    if (!team) throw new NotFoundException('Tim nije pronadjen');
     return team;
   }
 
@@ -62,16 +62,16 @@ export class TeamsService {
       where: { team: { id: teamId }, applicant: { id: applicant.id } },
     });
 
-    if (existing) throw new BadRequestException('Već ste poslali zahtev za ovaj tim');
+    if (existing) throw new BadRequestException('Vec ste poslali zahtev za ovaj tim');
 
     const isMember = team.members?.some((m) => m.id === applicant.id);
-    if (isMember) throw new BadRequestException('Već ste član ovog tima');
+    if (isMember) throw new BadRequestException('Vec ste clan ovog tima');
 
     const request = this.joinRequestRepository.create({ team, applicant });
     const saved = await this.joinRequestRepository.save(request);
 
     await this.notificationsService.create(
-      `${applicant.username} želi da se pridruži timu ${team.name}`,
+      `${applicant.username} zeli da se pridruzi timu ${team.name}`,
       'team_join_request',
       team.captain,
       teamId,
@@ -89,13 +89,13 @@ export class TeamsService {
   async respondToJoinRequest(requestId: number, status: string): Promise<TeamJoinRequest> {
     await this.joinRequestRepository.update(requestId, { status });
     const request = await this.joinRequestRepository.findOne({ where: { id: requestId } });
-    if (!request) throw new NotFoundException('Zahtev nije pronađen');
+    if (!request) throw new NotFoundException('Zahtev nije pronadjen');
 
     if (status === 'accepted') {
       await this.addMember(request.team.id, request.applicant);
     }
 
-    const statusText = status === 'accepted' ? 'prihvaćen' : 'odbijen';
+    const statusText = status === 'accepted' ? 'prihvacen' : 'odbijen';
     await this.notificationsService.create(
       `Tvoj zahtev za tim "${request.team.name}" je ${statusText}`,
       'team_join_request',

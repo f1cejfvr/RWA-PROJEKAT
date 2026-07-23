@@ -18,7 +18,7 @@ export class User {
   bio: string;
 
   @Column({ default: 'both' })
-  type: string; // 'gamer', 'sports', 'both'
+  type: string;
 
   @Column({ default: 0 })
   rating: number;

@@ -44,7 +44,7 @@ export class MessagesService {
 
   async remove(id: number): Promise<void> {
     const message = await this.messageRepository.findOne({ where: { id } });
-    if (!message) throw new NotFoundException('Poruka nije pronađena');
+    if (!message) throw new NotFoundException('Poruka nije pronadjena');
     await this.messageRepository.delete(id);
   }
 }

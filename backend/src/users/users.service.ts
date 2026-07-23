@@ -19,7 +19,7 @@ export class UsersService {
 
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) throw new NotFoundException('Korisnik nije pronađen');
+    if (!user) throw new NotFoundException('Korisnik nije pronadjen');
     return user;
   }
 
@@ -42,7 +42,7 @@ export class UsersService {
       relations: { friends: true },
     });
     const friend = await this.findOne(friendId);
-    if (!user) throw new NotFoundException('Korisnik nije pronađen');
+    if (!user) throw new NotFoundException('Korisnik nije pronadjen');
     user.friends = [...(user.friends || []), friend];
     return this.userRepository.save(user);
   }
@@ -52,7 +52,7 @@ export class UsersService {
       where: { id: userId },
       relations: { friends: true },
     });
-    if (!user) throw new NotFoundException('Korisnik nije pronađen');
+    if (!user) throw new NotFoundException('Korisnik nije pronadjen');
     return user.friends;
   }
 
@@ -60,7 +60,7 @@ export class UsersService {
     const existing = await this.friendRequestRepository.findOne({
       where: { sender: { id: senderId }, receiver: { id: receiverId } },
     });
-    if (existing) throw new Error('Zahtev već postoji');
+    if (existing) throw new Error('Zahtev vec postoji');
 
     const sender = await this.findOne(senderId);
     const receiver = await this.findOne(receiverId);
@@ -78,7 +78,7 @@ export class UsersService {
   async respondToFriendRequest(requestId: number, status: string): Promise<FriendRequest> {
     await this.friendRequestRepository.update(requestId, { status });
     const request = await this.friendRequestRepository.findOne({ where: { id: requestId } });
-    if (!request) throw new NotFoundException('Zahtev nije pronađen');
+    if (!request) throw new NotFoundException('Zahtev nije pronadjen');
 
     if (status === 'accepted') {
       await this.addFriend(request.sender.id, request.receiver.id);

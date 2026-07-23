@@ -5,10 +5,10 @@
       <div class="team-detail-header">
         <div>
           <span class="team-category">
-            {{ team.category === 'gaming' ? '🎮' : '⚽' }} {{ team.category }}
+            {{ team.category === 'gaming' ? 'Igrice' : 'Sport' }} {{ team.category }}
           </span>
           <span class="team-status" [class.open]="team.status === 'open'">
-            {{ team.status === 'open' ? 'Prima članove' : 'Popunjen' }}
+            {{ team.status === 'open' ? 'Prima clanove' : 'Popunjen' }}
           </span>
         </div>
       </div>
@@ -19,7 +19,7 @@
       <div class="team-meta">
         <div class="meta-item">
           <span class="meta-label">Kapiten</span>
-          <span>👑 {{ team.captain?.username }}</span>
+          <span>{{ team.captain?.username }}</span>
         </div>
         <div class="meta-item" *ngIf="team.game">
           <span class="meta-label">Igrica</span>
@@ -31,15 +31,15 @@
         </div>
         <div class="meta-item" *ngIf="team.city">
           <span class="meta-label">Grad</span>
-          <span>📍 {{ team.city }}</span>
+          <span>{{ team.city }}</span>
         </div>
       </div>
 
       <div class="members-section">
-        <h3>Članovi ({{ team.members?.length || 0 }})</h3>
+        <h3>Clanovi ({{ team.members?.length || 0 }})</h3>
         <div class="members-list">
           <div *ngFor="let member of team.members" class="member-item">
-            <span>👤 {{ member.username }}</span>
+            <span>{{ member.username }}</span>
             <span *ngIf="member.id === team.captain?.id" class="captain-badge">Kapiten</span>
           </div>
         </div>
@@ -47,18 +47,18 @@
 
       <div class="team-actions" *ngIf="user$ | async as user">
         <ng-container *ngIf="user.id === team.captain?.id; else memberActions">
-          <button class="btn btn-primary" (click)="onEdit(team)">✏️ Uredi tim</button>
+          <button class="btn btn-primary" (click)="onEdit(team)">Uredi tim</button>
           <button class="btn btn-secondary" (click)="onToggleStatus(team.id, team.status)">
-            {{ team.status === 'open' ? '🔒 Zatvori primanje' : '🔓 Otvori primanje' }}
+            {{ team.status === 'open' ? 'Zatvori primanje' : 'Otvori primanje' }}
           </button>
-          <button class="btn btn-danger" (click)="onDelete(team.id)">🗑️ Obriši tim</button>
+          <button class="btn btn-danger" (click)="onDelete(team.id)">Obrisi tim</button>
         </ng-container>
         <ng-template #memberActions>
           <ng-container *ngIf="!isMember(team, user.id)">
             <button *ngIf="!joinRequestSent" class="btn btn-primary" (click)="onJoin(team.id)" [disabled]="team.status !== 'open'">
-              {{ team.status === 'open' ? 'Zatraži pristup' : 'Tim je popunjen' }}
+              {{ team.status === 'open' ? 'Zatrazi pristup' : 'Tim je popunjen' }}
             </button>
-            <span *ngIf="joinRequestSent" class="success-badge">✅ Zahtev poslat!</span>
+            <span *ngIf="joinRequestSent" class="success-badge">Zahtev poslat!</span>
           </ng-container>
           <button *ngIf="isMember(team, user.id)" class="btn btn-secondary" (click)="onLeave(team.id, user.id)">
             Napusti tim
@@ -75,8 +75,8 @@
           </div>
         </div>
         <div *ngIf="isMember(team, user.id)" class="message-input">
-          <input type="text" [(ngModel)]="newMessage" placeholder="Napiši poruku..." (keyup.enter)="sendMessage(team.id)" />
-          <button class="btn btn-primary" (click)="sendMessage(team.id)">Pošalji</button>
+          <input type="text" [(ngModel)]="newMessage" placeholder="Napisi poruku..." (keyup.enter)="sendMessage(team.id)" />
+          <button class="btn btn-primary" (click)="sendMessage(team.id)">Posalji</button>
         </div>
       </div>
     </ng-container>
@@ -96,11 +96,11 @@
         <input type="text" [(ngModel)]="editData.city" />
       </div>
       <div class="form-actions">
-        <button class="btn btn-secondary" (click)="onCancelEdit()">Otkaži</button>
-        <button class="btn btn-primary" (click)="onSaveEdit(team.id)">Sačuvaj</button>
+        <button class="btn btn-secondary" (click)="onCancelEdit()">Otkazi</button>
+        <button class="btn btn-primary" (click)="onSaveEdit(team.id)">Sacuvaj</button>
       </div>
     </ng-template>
 
-    <a routerLink="/teams" class="back-link">← Nazad na timove</a>
+    <a routerLink="/teams" class="back-link">Nazad na timove</a>
   </div>
 </div>

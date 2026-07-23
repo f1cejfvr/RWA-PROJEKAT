@@ -1,13 +1,13 @@
 <div class="container">
   <div class="page-header">
-    <h1>Pronađi igrače</h1>
+    <h1>Pronadji igrace</h1>
   </div>
 
   <div class="search-bar">
     <input
       type="text"
       [(ngModel)]="searchQuery"
-      placeholder="Pretraži po imenu ili gradu..."
+      placeholder="Pretrazi po imenu ili gradu..."
       (input)="onSearch(searchQuery)"
     />
   </div>
@@ -17,40 +17,40 @@
       <div class="user-avatar">{{ user.username[0].toUpperCase() }}</div>
       <div class="user-info">
         <h3>{{ user.username }}</h3>
-        <p *ngIf="user.city">📍 {{ user.city }}</p>
+        <p *ngIf="user.city">{{ user.city }}</p>
         <span class="user-type">
-          {{ user.type === 'gamer' ? '🎮' : user.type === 'sports' ? '⚽' : '🎮⚽' }}
+          {{ user.type === 'gamer' ? 'Igrice' : user.type === 'sports' ? 'Sport' : 'Igrice & Sport' }}
         </span>
       </div>
       <div class="user-stats">
-        <span>⭐ {{ user.rating }}</span>
-        <span>🏆 {{ user.wins }} pobeda</span>
+        <span>{{ user.rating }}</span>
+        <span>{{ user.wins }} pobeda</span>
       </div>
       <div class="user-actions" *ngIf="currentUser$ | async as currentUser">
         <button
           *ngIf="currentUser.id !== user.id && !sentRequests.includes(user.id)"
           class="btn btn-secondary"
           (click)="addFriend(user.id); $event.stopPropagation()">
-          + Dodaj prijatelja
+          Dodaj prijatelja
         </button>
-        <span *ngIf="sentRequests.includes(user.id)" class="added-badge">✅ Zahtev poslat!</span>
+        <span *ngIf="sentRequests.includes(user.id)" class="added-badge">Zahtev poslat!</span>
       </div>
     </div>
   </div>
 
   <div *ngIf="users.length === 0" class="empty-state">
-    <p>Nema igrača koji odgovaraju pretrazi.</p>
+    <p>Nema igraca koji odgovaraju pretrazi.</p>
   </div>
 </div>
 
 <div class="modal-overlay" *ngIf="selectedUser" (click)="closeProfile()">
   <div class="modal-card" (click)="$event.stopPropagation()">
-    <button class="modal-close" (click)="closeProfile()">✕</button>
+    <button class="modal-close" (click)="closeProfile()">Zatvori</button>
     <div class="modal-avatar">{{ selectedUser.username[0].toUpperCase() }}</div>
     <h2>{{ selectedUser.username }}</h2>
-    <p *ngIf="selectedUser.city">📍 {{ selectedUser.city }}</p>
+    <p *ngIf="selectedUser.city">{{ selectedUser.city }}</p>
     <span class="user-type">
-      {{ selectedUser.type === 'gamer' ? '🎮 Gamer' : selectedUser.type === 'sports' ? '⚽ Sportista' : '🎮⚽ Gamer & Sportista' }}
+      {{ selectedUser.type === 'gamer' ? 'Gamer' : selectedUser.type === 'sports' ? 'Sportista' : 'Gamer & Sportista' }}
     </span>
     <div class="modal-stats">
       <div class="stat-item">
@@ -59,7 +59,7 @@
       </div>
       <div class="stat-item">
         <span class="stat-value">{{ selectedUser.matchesPlayed }}</span>
-        <span class="stat-label">Mečevi</span>
+        <span class="stat-label">Mecevi</span>
       </div>
       <div class="stat-item">
         <span class="stat-value">{{ selectedUser.wins }}</span>
