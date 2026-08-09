@@ -1,5 +1,5 @@
 .hero {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, #0a1628 0%, #0f4c75 50%, #1b6ca8 100%);
   color: white;
   padding: 5rem 2rem;
   text-align: center;
@@ -17,7 +17,7 @@
 }
 
 .highlight {
-  color: #e94560;
+  color: white;
 }
 
 .hero-content p {
@@ -30,6 +30,7 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .features {
@@ -59,11 +60,25 @@
 
 .feature-card h3 {
   font-size: 1.25rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 0.75rem;
 }
 
 .feature-card p {
   color: #888;
   line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .features {
+    padding: 2rem 1rem;
+  }
 }

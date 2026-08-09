@@ -4,13 +4,14 @@
   align-items: center;
   padding: 0 2rem;
   height: 60px;
-  background-color: #1a1a2e;
+  background-color: #0a1628;
   color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
 .navbar-brand a {
-  color: #e94560;
+  color: #1cad6e;
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: bold;
@@ -35,7 +36,7 @@
 }
 
 .navbar-links button {
-  background-color: #e94560;
+  background-color: #1cad6e;
   color: white;
   border: none;
   padding: 0.4rem 1rem;
@@ -46,5 +47,60 @@
 }
 
 .navbar-links button:hover {
-  background-color: #c73652;
+  background-color: #159e5f;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+}
+
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 6px);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -6px);
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .navbar-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: #0a1628;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    z-index: 100;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .navbar-links.open {
+    display: flex;
+  }
 }

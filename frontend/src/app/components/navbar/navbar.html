@@ -3,20 +3,26 @@
     <a routerLink="/">PlayMate</a>
   </div>
 
-  <div class="navbar-links">
-    <a routerLink="/events">Eventi</a>
-    <a routerLink="/teams">Timovi</a>
-    <a routerLink="/users">Igraci</a>
+  <button class="hamburger" [class.open]="menuOpen" (click)="menuOpen = !menuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="navbar-links" [class.open]="menuOpen">
+    <a routerLink="/events" (click)="menuOpen = false">Eventi</a>
+    <a routerLink="/teams" (click)="menuOpen = false">Timovi</a>
+    <a routerLink="/users" (click)="menuOpen = false">Igraci</a>
 
     <ng-container *ngIf="isLoggedIn$ | async; else guestLinks">
-      <a routerLink="/notifications">Notifikacije</a>
-      <a routerLink="/profile">Profil ({{ (user$ | async)?.username }})</a>
-      <button (click)="onLogout()">Odjavi se</button>
+      <a routerLink="/notifications" (click)="menuOpen = false">Notifikacije</a>
+      <a routerLink="/profile" (click)="menuOpen = false">Profil ({{ (user$ | async)?.username }})</a>
+      <button (click)="onLogout(); menuOpen = false">Odjavi se</button>
     </ng-container>
 
     <ng-template #guestLinks>
-      <a routerLink="/login">Prijavi se</a>
-      <a routerLink="/register">Registruj se</a>
+      <a routerLink="/login" (click)="menuOpen = false">Prijavi se</a>
+      <a routerLink="/register" (click)="menuOpen = false">Registruj se</a>
     </ng-template>
   </div>
 </nav>

@@ -9,7 +9,7 @@
 
 .form-card h1 {
   font-size: 1.75rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 2rem;
 }
 
@@ -38,5 +38,25 @@ textarea {
 
 textarea:focus {
   outline: none;
-  border-color: #e94560;
+  border-color: #1cad6e;
+}
+
+@media (max-width: 768px) {
+  .form-card {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+    text-align: center;
+  }
 }

@@ -17,7 +17,7 @@
 
 .auth-card h2 {
   font-size: 1.75rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 0.5rem;
 }
 
@@ -44,11 +44,17 @@
 }
 
 .auth-footer a {
-  color: #e94560;
+  color: #1cad6e;
   text-decoration: none;
   font-weight: 500;
 }
 
 .auth-footer a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
 }

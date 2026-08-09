@@ -15,6 +15,7 @@ import { logout } from '../../store/auth.actions';
 export class Navbar implements OnInit {
   isLoggedIn$: Observable<boolean>;
   user$: Observable<{ id: number; email: string; username: string } | null>;
+  menuOpen = false;
 
   constructor(private store: Store, private router: Router) {
     this.isLoggedIn$ = this.store.select(selectIsLoggedIn);

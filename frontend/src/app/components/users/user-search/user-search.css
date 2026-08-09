@@ -4,7 +4,7 @@
 
 .page-header h1 {
   font-size: 2rem;
-  color: #1a1a2e;
+  color: #0f4c75;
 }
 
 .search-bar {
@@ -34,6 +34,7 @@
   text-align: center;
   gap: 0.75rem;
   transition: transform 0.2s;
+  cursor: pointer;
 }
 
 .user-card:hover {
@@ -43,7 +44,7 @@
 .user-avatar {
   width: 60px;
   height: 60px;
-  background: #e94560;
+  background: #1cad6e;
   color: white;
   border-radius: 50%;
   display: flex;
@@ -55,7 +56,7 @@
 
 .user-info h3 {
   font-size: 1.1rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 0.25rem;
 }
 
@@ -91,7 +92,7 @@
 }
 
 .added-badge {
-  color: #2e7d32;
+  color: #1cad6e;
   font-size: 0.9rem;
 }
 
@@ -132,7 +133,7 @@
 .modal-avatar {
   width: 80px;
   height: 80px;
-  background: #e94560;
+  background: #1cad6e;
   color: white;
   border-radius: 50%;
   display: flex;
@@ -145,7 +146,7 @@
 
 .modal-card h2 {
   font-size: 1.5rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 0.5rem;
 }
 
@@ -155,7 +156,7 @@
   gap: 2rem;
   margin: 1rem 0;
   padding: 1rem;
-  background: #f8f9fa;
+  background: #f0f7ff;
   border-radius: 8px;
 }
 
@@ -169,7 +170,7 @@
 .stat-value {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #1a1a2e;
+  color: #0f4c75;
 }
 
 .stat-label {
@@ -182,4 +183,10 @@
   color: #666;
   font-style: italic;
   margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
 }

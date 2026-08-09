@@ -18,7 +18,7 @@
 .profile-avatar {
   width: 80px;
   height: 80px;
-  background: #e94560;
+  background: #1cad6e;
   color: white;
   border-radius: 50%;
   display: flex;
@@ -35,7 +35,7 @@
 
 .profile-info h1 {
   font-size: 1.75rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 0.25rem;
 }
 
@@ -45,10 +45,17 @@
 }
 
 .profile-type {
-  background: #f0f2f5;
+  background: #f0f7ff;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
+  color: #0f4c75;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .profile-stats {
@@ -57,8 +64,9 @@
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
+  background: #f0f7ff;
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .stat-item {
@@ -71,7 +79,9 @@
 .stat-value {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #1a1a2e;
+  color: #0f4c75;
+  word-break: break-word;
+  text-align: center;
 }
 
 .stat-label {
@@ -86,7 +96,7 @@
 
 .profile-bio h3 {
   font-size: 1.1rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 0.75rem;
 }
 
@@ -97,7 +107,7 @@
 
 .friends-section h3 {
   font-size: 1.1rem;
-  color: #1a1a2e;
+  color: #0f4c75;
   margin-bottom: 1rem;
 }
 
@@ -111,7 +121,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #f0f2f5;
+  background: #f0f7ff;
   padding: 0.5rem 1rem;
   border-radius: 20px;
 }
@@ -119,7 +129,7 @@
 .friend-avatar {
   width: 30px;
   height: 30px;
-  background: #e94560;
+  background: #1cad6e;
   color: white;
   border-radius: 50%;
   display: flex;
@@ -141,6 +151,12 @@
   margin-top: 1.5rem;
 }
 
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
 textarea {
   width: 100%;
   padding: 0.6rem 0.8rem;
@@ -153,7 +169,7 @@ textarea {
 
 textarea:focus {
   outline: none;
-  border-color: #e94560;
+  border-color: #1cad6e;
 }
 
 .btn-danger {
@@ -169,4 +185,27 @@ textarea:focus {
 
 .btn-danger:hover {
   background-color: #c62828;
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-actions {
+    width: 100%;
+  }
+
+  .profile-actions .btn {
+    flex: 1;
+  }
 }
